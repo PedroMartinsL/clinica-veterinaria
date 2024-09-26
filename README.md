@@ -26,27 +26,41 @@ O Diagrama de Classes abaixo representa a estrutura do sistema, incluindo as cla
 
 # Principais Classes:
 I. Entidades (Classe abstrata)
+
 Atributos: nome, cpf, senha
 
 II. Pet
+
 Atributos: cpf (do tutor), idade, raca, alimento
+
 Método: solicitarAlimentacao()
 
 III. Funcionario (Classe base para Veterinário, Auxiliar e Administrador, herda de Entidades)
+
 Atributos: setor
+
 Métodos:
 
 cobrarConsulta()
+
 solicitarConsulta()
 
 IV. Veterinario (Herda de Funcionario)
+
 Métodos:
+
 checarDiagnostico()
+
 prescreverMedicamento()
+
 V. Auxiliar (Herda de Funcionario)
+
 Métodos:
+
 atender()
+
 internarConsulta()
+
 
 VI. Administrador (Herda de Funcionario)
 Métodos:
