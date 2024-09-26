@@ -80,7 +80,7 @@ JDBC: Classe responsável pela comunicação com o banco de dados.
 # III. Tecnologias Utilizadas
 I. Linguagem de Programação: Java
 II. Banco de Dados: MySQL (ou outro banco de dados relacional)
-III. Diagrama UML e Casos de Uso: Criados utilizando ferramentas de modelagem (ex.: Lucidchart ou StarUML)
+III. Diagrama UML e Casos de Uso: Criados utilizando ferramentas de modelagem (draw.io)
 
 # IV. Requisitos do Sistema
 I. Java 11+
