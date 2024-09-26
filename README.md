@@ -1,11 +1,11 @@
 # Sistema de Gerenciamento de Clínica Veterinária
 
-Funcionalidades Principais
+# Funcionalidades Principais
 Este projeto é um sistema de gerenciamento para uma clínica veterinária, cujo objetivo é facilitar o controle de consultas, internamentos, histórico médico, estoque de medicamentos e o quadro financeiro da clínica. O sistema é voltado para veterinários, auxiliares e administradores, otimizando a gestão diária da clínica.
 
 Entre as funcionalidades principais, o sistema permite o cadastro de pets com informações como CPF do tutor, raça e idade, além da gestão de consultas, onde os usuários podem solicitar consultas e realizar atendimentos. Os veterinários podem realizar diagnósticos e prescrever medicamentos após o atendimento. O sistema também permite o controle de internamento, onde se gerencia o horário de medicação dos pets internados. Além disso, há uma ferramenta para gerenciamento do estoque de medicamentos e uma funcionalidade para exibir o histórico de doenças de cada animal. Por fim, o sistema oferece um módulo de quadro financeiro para monitoramento e gerenciamento das finanças da clínica.
 
-I. Diagrama de Casos de Uso
+# I. Diagrama de Casos de Uso
 O diagrama a seguir ilustra os principais casos de uso do sistema, descrevendo as interações entre os usuários (veterinário, auxiliar do veterinário, administrador) e as funcionalidades do sistema.
 
 ![Diagrama de Casos de Uso](https://github.com/user-attachments/assets/2b2da7db-3c9e-44fa-8ecd-11b10aff7324)
@@ -19,7 +19,7 @@ V. Gerenciar Estoque de Medicamentos: O administrador pode adicionar ou remover 
 VI. Consultar Histórico de Doenças: Permite visualizar o histórico de doenças do pet.
 VII. Gerenciar Quadro Financeiro: Administradores podem gerenciar as finanças da clínica, monitorando despesas e receitas.
 
-II. Diagrama de Classes (UML)
+# II. Diagrama de Classes (UML)
 O Diagrama de Classes abaixo representa a estrutura do sistema, incluindo as classes, seus atributos e métodos, bem como os relacionamentos entre elas.
 
 ![image](https://github.com/user-attachments/assets/0c0e2f6e-3875-47b6-bd5c-ddfe7beafcf8)
