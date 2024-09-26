@@ -41,47 +41,33 @@ Atributos: setor
 
 Métodos:
 
-cobrarConsulta()
-
-solicitarConsulta()
+cobrarConsulta() solicitarConsulta()
 
 IV. Veterinario (Herda de Funcionario)
 
-Métodos:
-
-checarDiagnostico()
-
-prescreverMedicamento()
+Métodos: checarDiagnostico() prescreverMedicamento()
 
 V. Auxiliar (Herda de Funcionario)
 
-Métodos:
-
-atender()
-
-internarConsulta()
+Métodos: atender() internarConsulta()
 
 
 VI. Administrador (Herda de Funcionario)
-Métodos:
-gerenciarEstoque()
-consultarHistoricoFinanceiro()
-removerClinica()
+Métodos: gerenciarEstoque() consultarHistoricoFinanceiro() removerClinica()
 
 VII. Clinica
 Atributo: estoqueMedicamentos
-Métodos:
-reportMedicamento()
-removerMedicamento()
+
+Métodos:reportMedicamento() removerMedicamento()
 
 VIII. Medicamento
+
 Métodos: medicar()
-Subclasses: Viral, Bacteria, Glucide
+
 
 IX. Servico
-Métodos:
-financeiro()
-iniciarConsulta()
+
+Métodos: financeiro() iniciarConsulta()
 
 # Outras Classes:
 
