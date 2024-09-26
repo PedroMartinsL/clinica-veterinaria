@@ -1,5 +1,6 @@
 # Sistema de Gerenciamento de Clínica Veterinária
-![Design sem nome](https://github.com/user-attachments/assets/a41644e9-10e6-4d96-8566-c8af775dabab)
+![Design sem nome](https://github.com/user-attachments/assets/9a47f6dc-c898-47d3-bafc-8b8125252681)
+
 
 # Funcionalidades Principais
 Este projeto é um sistema de gerenciamento para uma clínica veterinária, cujo objetivo é facilitar o controle de consultas, internamentos, histórico médico, estoque de medicamentos e o quadro financeiro da clínica. O sistema é voltado para veterinários, auxiliares e administradores, otimizando a gestão diária da clínica.
