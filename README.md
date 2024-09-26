@@ -39,9 +39,7 @@ III. Funcionario (Classe base para Veterinário, Auxiliar e Administrador, herda
 
 Atributos: setor
 
-Métodos:
-
-cobrarConsulta() solicitarConsulta()
+Métodos: cobrarConsulta() solicitarConsulta()
 
 IV. Veterinario (Herda de Funcionario)
 
