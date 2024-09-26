@@ -25,51 +25,50 @@ O Diagrama de Classes abaixo representa a estrutura do sistema, incluindo as cla
 ![image](https://github.com/user-attachments/assets/0c0e2f6e-3875-47b6-bd5c-ddfe7beafcf8)
 
 # Principais Classes:
-I. Entidades (Classe abstrata)
+Entidades (Classe abstrata)
+
 Atributos: nome, cpf, senha
+Pet
 
-II. Pet
-Atributos: cpf (do tutor), idade, raca, alimento
+Atributos: cpf (do tutor), idade, raça, alimento
 Método: solicitarAlimentacao()
+Funcionario (Classe base para Veterinário, Auxiliar e Administrador, herda de Entidades)
 
-III. Funcionario (Classe base para Veterinário, Auxiliar e Administrador, herda de Entidades)
 Atributos: setor
 Métodos:
-
 cobrarConsulta()
 solicitarConsulta()
-IV. Veterinario (Herda de Funcionario)
-Métodos:
+Veterinario (Herda de Funcionario)
 
+Métodos:
 checarDiagnostico()
 prescreverMedicamento()
-V. Auxiliar (Herda de Funcionario)
-Métodos:
+Auxiliar (Herda de Funcionario)
 
+Métodos:
 atender()
 internarConsulta()
-VI. Administrador (Herda de Funcionario)
-Métodos:
+Administrador (Herda de Funcionario)
 
+Métodos:
 gerenciarEstoque()
 consultarHistoricoFinanceiro()
 removerClinica()
-VII. Clinica
+Clinica
+
 Atributo: estoqueMedicamentos
 Métodos:
-
 reportMedicamento()
 removerMedicamento()
-VIII. Medicamento
+Medicamento
+
 Métodos: medicar()
 Subclasses: Viral, Bacteria, Glucide
+Servico
 
-IX. Servico
 Métodos:
-
 financeiro()
 iniciarConsulta()
-Outras Classes:
 
 MedicamentoFactory: Implementa o padrão Factory para criar medicamentos.
 JDBC: Classe responsável pela comunicação com o banco de dados.
