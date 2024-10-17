@@ -1,6 +1,10 @@
 package model.entidades;
 
+import java.util.ArrayList;
+
 public class Administrador extends Entidade {
+	
+	private ArrayList<String> notify = new ArrayList<>();
 
 	public Administrador(String name, String cpf, String senha) {
 		super(name, cpf, senha);
@@ -23,6 +27,18 @@ public class Administrador extends Entidade {
 	public void removerUser() {
 		// TODO Auto-generated method stub
 		
+	}
+	
+	private void contratar(Entidade entidade) {
+		
+	}
+	
+	private void demitir(Entidade entidade) {
+		
+	}
+	
+	public void update(String msg) {
+		this.notify.add(msg);
 	}
 
 }

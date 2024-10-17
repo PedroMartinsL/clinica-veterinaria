@@ -14,6 +14,8 @@ import model.recursos.Pedido;
 
 public class Estoque {
 	static Scanner sc = new Scanner(System.in);
+	
+	private static ArrayList<Administrador> admObservers = new ArrayList<>();
 
 	public static Medicamento removerMedicamento(Medicamento medicamento, Entidade responsavel, int quantidade) {
 		// código para remover diretamente do banco de dados
@@ -79,11 +81,34 @@ public class Estoque {
 		if (medicamento.isContrato()) {
 			String warning = String.format(" - O medicamento %s está perto de acabar, o estoque será reposto. - %s\n",
 					medicamento, LocalDateTime.now().toString());
-			//notificarAdm(warning);
+			notificarAdm(warning);
 		}
 		// código para incrementar os remédios no BD
 	}
 
+	public static void notificarAdm(String msg) {
+		// aqui recebemos a lista dos adms pelo BD
+		for (Administrador adm : admObservers) {
+			adm.update(msg);
+		}
+	}
+	
+	public static void registerAdm(Administrador adm) {
+		getAdmObservers().add(adm);
+	}
+	
+	public static void removeadm(Administrador adm) {
+		getAdmObservers().add(adm);
+	}
+
+	public static ArrayList<Administrador> getAdmObservers() {
+		return admObservers;
+	}
+
+	public static void setAdmObservers(ArrayList<Administrador> admObservers) {
+		Estoque.admObservers = admObservers;
+	}
+	
 	
 
 }
