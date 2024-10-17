@@ -4,25 +4,28 @@ public class Funcionario extends Entidade {
 
 	public Funcionario(String name, String cpf, String senha) {
 		super(name, cpf, senha);
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override
 	public void operacoes() {
-		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void addUser() {
-		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void removerUser() {
-		// TODO Auto-generated method stub
-		
+
 	}
 
+	public void cobrarConsulta(Pet pet) {
+		System.out.println("Cobrando consulta para o pet: " + pet.getAnimal());
+	}
+
+	public void solicitarConsulta(Pet pet) {
+		System.out.println("Solicitando consulta para o pet: " + pet.getAnimal());
+	}
 }
