@@ -1,28 +1,28 @@
 package model.entidades;
 
-import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Scanner;
-
+import model.recursos.Medicamento;
+import model.recursos.Pedido;
 public class AuxiliarVeterinario extends Entidade {
 
 	public AuxiliarVeterinario(String name, String cpf, String senha) {
 		super(name, cpf, senha);
 		
 	}
-
+	  Scanner sc = new Scanner(System.in);
 	@Override
-	public void operacoes(Veterinario veterinario) {
-        Scanner scanner = new Scanner(System.in);
-
+	public void operacoes() {
+        
         while (true) {
-            System.out.println("\n MENU DE OPERAÇÕES (Auxiliar Veterinário)");
+            System.out.println("Menu de operações (Auxiliar Veterinário)");
             System.out.println("1. Atender Pet");
             System.out.println("2. Aplicar Medicamento");
             System.out.println("3. Sair");
             System.out.print("Escolha uma opção: ");
-            int opcao = scanner.nextInt();
-            scanner.nextLine();
+            int opcao = sc.nextInt();
+            sc.nextLine(); 
 
             switch (opcao) {
                 case 1:
@@ -30,51 +30,50 @@ public class AuxiliarVeterinario extends Entidade {
                     break;
 
                 case 2:
-                    // Aplicar medicamento
-                    aplicarMedicamento(veterinario);
+                    aplicarMedicamento(null, null); // Chama o método para aplicar medicação
                     break;
 
                 case 3:
                     System.out.println("Saindo...");
-                    return;
+                    sc.close(); 
+                    return; 
 
                 default:
                     System.out.println("Opção inválida! Tente novamente.");
             }
         }
     }
-
-    private void aplicarMedicamento(Veterinario veterinario) {
-        Scanner scanner = new Scanner(System.in);
-        System.out.print("Informe o CPF do dono do pet: ");
-        String cpfDono = scanner.nextLine();
-
-        System.out.print("Informe a quantidade de medicamentos: ");
-        int quantidade = scanner.nextInt();
-        scanner.nextLine();
-
+            
+            
+    void aplicarMedicamento(Medicamento nome, Entidade auxVeterinario) {
+        
         System.out.print("Informe o nome do medicamento: ");
-        String nomeMedicamento = scanner.nextLine();
+        String nomeMedicamento = sc.nextLine();
+
+        System.out.print("Informe a quantidade do medicamento: ");
+        int quantidadeMedicamento = sc.nextInt();
+        sc.nextLine();
 
         //construtor do medicamento
-        Medicamento medicamento = new Medicamento(nomeMedicamento);
+        Medicamento medicamento = new Medicamento(0, nomeMedicamento, 0, null, null, null);
 
         //armazena o medicamento e sua quantidade
         Map<Medicamento, Integer> mapMedicamentos = new HashMap<>();
-        mapMedicamentos.put(medicamento, quantidade);
+        mapMedicamentos.put(medicamento, quantidadeMedicamento);
 
         
-        Pedido pedido = new Pedido(veterinario, mapMedicamentos);
+        Pedido pedido = new Pedido(auxVeterinario, mapMedicamentos);
 
         //solicitar medicamento
         solicitarMedicamento(pedido);
 
-        System.out.println("Aplicando " + quantidade + " doses de " + nomeMedicamento + " para o pet do dono com CPF: " + cpfDono + ".");
+        System.out.println("Aplicando " + quantidadeMedicamento + " doses de " + nomeMedicamento + " para o pet do dono com CPF: ");
     }
     
     private void solicitarMedicamento(Pedido pedido) {
         System.out.println("Medicamento solicitado: " + pedido);
-    }
+
+	}
 	@Override
 	public void addUser() {
 		
