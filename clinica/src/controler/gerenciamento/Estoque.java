@@ -1,8 +1,10 @@
 package controler.gerenciamento;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
@@ -22,6 +24,11 @@ public class Estoque {
 		// tabela de retirada
 		checarEstoque(medicamento);
 		return medicamento;
+	}
+	
+	public static void removerMedicamento(Medicamento medicamento) {
+		// código para remover diretamente do banco de dados
+		// descartar vencidos
 	}
 
 	public static void cancelarContrato(Medicamento medicamento) {
@@ -70,11 +77,29 @@ public class Estoque {
 
 	private static void checarEstoque(Medicamento medicamento) {
 		boolean statement = true;// checagem de medicamento no estoque no bd
-
+		
 		// TO DO
+		
 		if (statement) {
 			reporMedicamento(medicamento.clone());
 		}
+	}
+	
+	private static void checarValidade(Medicamento medicamento) {
+		LocalDate ld = LocalDate.now();
+		// ler o BD
+		ArrayList<Medicamento> remediosAnalise = new ArrayList<>(); // aqui são passados os medicamentos pesquisados
+		Iterator<Medicamento> remedio = remediosAnalise.iterator();
+		while (remedio.hasNext()) {
+			Medicamento atualIterator = remedio.next();
+			if (atualIterator.getValidade().isBefore(ld)) {
+				removerMedicamento(medicamento);
+			}
+		}
+	}
+	
+	private static void checarValidade() {
+		ArrayList<Medicamento> remediosAnalise = new ArrayList<>(); // aqui são passados todos os medicamentos
 	}
 	
 	public static void reporMedicamento(Medicamento medicamento) {

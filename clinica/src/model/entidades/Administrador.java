@@ -37,6 +37,10 @@ public class Administrador extends Entidade {
 		
 	}
 	
+	private void rendaClinica() {
+		
+	}
+	
 	public void update(String msg) {
 		this.notify.add(msg);
 	}
