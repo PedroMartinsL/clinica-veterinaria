@@ -1,6 +1,8 @@
-package model.entidades;
+package controller;
 
 import java.util.ArrayList;
+
+import model.entidades.Entidade;
 
 public class Administrador extends Entidade {
 	

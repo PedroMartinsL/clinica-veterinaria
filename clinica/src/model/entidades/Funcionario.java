@@ -1,5 +1,7 @@
 package model.entidades;
 
+import view.Pet;
+
 public class Funcionario extends Entidade {
 
 	public Funcionario(String name, String cpf, String senha) {

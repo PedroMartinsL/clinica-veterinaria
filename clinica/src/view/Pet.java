@@ -1,8 +1,7 @@
-package model.entidades;
+package view;
 
 import java.util.ArrayList;
 import java.util.List;
-import model.entidades.Consulta;
 
 public class Pet {
     private String cpfDono;

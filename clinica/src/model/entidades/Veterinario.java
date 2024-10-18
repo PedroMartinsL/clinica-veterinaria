@@ -3,6 +3,8 @@ package model.entidades;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+import view.Pet;
+
 public class Veterinario extends Entidade {
 
 	public Veterinario(String name, String cpf, String senha) {
