@@ -31,7 +31,8 @@ VII. Gerenciar Quadro Financeiro: Administradores podem gerenciar as finanças d
 # II. Diagrama de Classes (UML)
 O Diagrama de Classes abaixo representa a estrutura do sistema, incluindo as classes, seus atributos e métodos, bem como os relacionamentos entre elas.
 
-![image](https://github.com/user-attachments/assets/0c0e2f6e-3875-47b6-bd5c-ddfe7beafcf8)
+![image](https://github.com/user-attachments/assets/66307b2c-b155-47bb-99a9-99e3280cec1b)
+
 
 # Principais Classes:
 I. Entidades (Classe abstrata)
@@ -115,7 +116,7 @@ Após importar o arquivo, você poderá executar o código para realizar testes.
 
 # VI. Links
 Link - UML:
-https://miro.com/welcomeonboard/cWVVbm5NRUhGZVU0Y01CTzdFYUMzUGNZVHJ0cFlmTUY0SVNQQ1hWQTdORkQ0TWhTWnc4SEVTV3lGZXFOa2hHMHwzNDU4NzY0NTk1MTcwNDM2MjE3fDI
+https://app.diagrams.net/#G1jvlncTRlkBArGsaFYYBzOIaKXMqghCRG#%7B%22pageId%22%3A%222Nwkg8L6xev0F9r1x96o%22%7D
 
 Link - Diagrama de Casos de Uso:
 https://miro.com/app/board/uXjVKg2JXh8=/
