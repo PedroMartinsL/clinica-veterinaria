@@ -2,11 +2,14 @@ package controller;
 
 import java.util.ArrayList;
 
+import controler.gerenciamento.ContratoGeral;
 import model.entidades.Entidade;
 
 public class Administrador extends Entidade {
 	
 	private ArrayList<String> notify = new ArrayList<>();
+	
+	 
 
 	public Administrador(String name, String cpf, String senha) {
 		super(name, cpf, senha);
