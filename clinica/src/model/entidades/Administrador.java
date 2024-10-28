@@ -1,9 +1,8 @@
-package controller;
+package model.entidades;
 
 import java.util.ArrayList;
 
 import controler.gerenciamento.ContratoGeral;
-import model.entidades.Entidade;
 
 public class Administrador extends Entidade {
 	

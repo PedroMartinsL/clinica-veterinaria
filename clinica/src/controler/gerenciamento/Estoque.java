@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 
-import controller.Administrador;
+import model.entidades.Administrador;
 import model.entidades.Entidade;
 import model.recursos.Medicamento;
 import model.recursos.Pedido;

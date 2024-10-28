@@ -3,8 +3,6 @@ package model.entidades;
 import java.util.List;
 import java.util.Scanner;
 
-import view.Pet;
-
 import model.recursos.Medicamento;
 public class Veterinario extends Entidade {
 

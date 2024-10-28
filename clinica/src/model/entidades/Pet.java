@@ -1,4 +1,4 @@
-package view;
+package model.entidades;
 
 import java.util.ArrayList;
 import java.util.List;
