@@ -7,10 +7,11 @@ public class Pet {
     private String cpfDono;
     private String animal;
     private String raca;
-    private String idade;
+    private Integer idade;
     private List<String> doencas; // Lista para armazenar doenças do pet
+    private int id;
 
-    public Pet(String cpfDono, String animal, String raca, String idade) {
+    public Pet(String cpfDono, String animal, String raca, Integer idade) {
         this.cpfDono = cpfDono;
         this.animal = animal;
         this.raca = raca;
@@ -43,19 +44,29 @@ public class Pet {
         this.raca = raca;
     }
 
-    public String getIdade() {
+    public Integer getIdade() {
         return idade;
     }
 
-    public void setIdade(String idade) {
+    public void setIdade(Integer idade) {
         this.idade = idade;
     }
+    
+    
 
     //public Consulta solicitarAtendimento(String doenca) {
     	
         
        
-    public void financiaCliente(String cpf) {
+    public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public void financiaCliente(String cpf) {
         System.out.println("Financiando cliente com CPF: " + cpf);
     }
 
