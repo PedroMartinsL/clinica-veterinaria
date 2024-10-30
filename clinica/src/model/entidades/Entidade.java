@@ -131,4 +131,29 @@ public abstract class Entidade implements Operacoes {
 			DB.closeStatement(st);
 		}
 	}
+	
+	public Entidade checkUser(Entidade obj) {
+		PreparedStatement st = null;
+		ResultSet rs = null;
+		try {
+			st = conn.prepareStatement("Select nome, "
+					+ "FROM * " //tabela de acordo com a classe
+					+ "WHERE senha = ? AND cpf = ?");
+			
+			st.setString(1, obj.getName());
+			st.setString(2, obj.getCpf());
+			
+			rs = st.executeQuery(); // Executa a atualização
+
+	        if (rs.next()) {
+	            //return new Código que será passado para cada subclasse
+	        }
+	        return null;
+		} catch (SQLException e) {
+			throw new DbException(e.getMessage());
+		} finally {
+			DB.closeStatement(st);
+			DB.closeResultSet(rs);
+		}
+	}
 }
