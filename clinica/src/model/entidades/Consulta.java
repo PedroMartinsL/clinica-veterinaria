@@ -6,54 +6,67 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 
 import db.DB;
 import db.DbException;
+import model.recursos.Medicamento;
 
 public class Consulta {
-    private Pet pet;
-    private String doenca;
-    private Date data;
-    
-    private Connection conn = DB.getConnection();
+	private Pet pet;
+	private String doenca;
+	private Date data;
+	private ArrayList<Medicamento> medicamentosAplicados;
+	private int consulta;
 
-    public Consulta(Pet pet, String doenca) {
-        this.pet = pet;
-        this.doenca = doenca;
-        //this.data ; // Define a data atual
-    }
+	public int getConsulta() {
+		return consulta;
+	}
 
-    // Getters e Setters
-    public Pet getPet() {
-        return pet;
-    }
+	public void setConn(Connection conn) {
+		this.conn = conn;
+	}
 
-    public void setPet(Pet pet) {
-        this.pet = pet;
-    }
+	private Connection conn = DB.getConnection();
 
-    public String getDoenca() {
-        return doenca;
-    }
+	public Consulta(Pet pet, String doenca) {
+		this.pet = pet;
+		this.doenca = doenca;
+		// this.data ; // Define a data atual
+	}
 
-    public void setDoenca(String doenca) {
-        this.doenca = doenca;
-    }
+	// Getters e Setters
+	public Pet getPet() {
+		return pet;
+	}
 
-    public Date getData() {
-        return data;
-    }
+	public void setPet(Pet pet) {
+		this.pet = pet;
+	}
 
-    public void setData(Date data) {
-        this.data = data;
-    }
-    
-    public void registrarPet(Pet pet) {
-		
+	public String getDoenca() {
+		return doenca;
+	}
+
+	public void setDoenca(String doenca) {
+		this.doenca = doenca;
+	}
+
+	public Date getData() {
+		return data;
+	}
+
+	public void setData(Date data) {
+		this.data = data;
+	}
+
+	public void registrarPet(Pet pet) {
+
 		PreparedStatement st = null;
 		try {
-			st = conn.prepareStatement("INSERT INTO pet " + "(Animal, cpf_dono, idade, raça) "
-					+ "VALUES " + "(?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
+			st = conn.prepareStatement(
+					"INSERT INTO pet " + "(Animal, cpf_dono, idade, raça) " + "VALUES " + "(?, ?, ?, ?, ?)",
+					Statement.RETURN_GENERATED_KEYS);
 
 			st.setString(1, pet.getAnimal());
 			st.setString(2, pet.getCpfDono());
@@ -80,13 +93,13 @@ public class Consulta {
 		}
 
 	}
-    
- public void solicitarConsulta() {
-		
+
+	public void solicitarConsulta() {
+
 		PreparedStatement st = null;
 		try {
-			st = conn.prepareStatement("INSERT INTO pet " + "(Animal, doenca, data) "
-					+ "VALUES " + "(?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
+			st = conn.prepareStatement("INSERT INTO pet " + "(Animal, doenca, data) " + "VALUES " + "(?, ?, ?, ?, ?)",
+					Statement.RETURN_GENERATED_KEYS);
 
 			st.setInt(1, getPet().getId());
 			st.setString(2, getDoenca());
@@ -112,4 +125,13 @@ public class Consulta {
 		}
 
 	}
+
+	public ArrayList<Medicamento> getMedicamentosAplicados() {
+		return medicamentosAplicados;
+	}
+
+	public void setMedicamentosAplicados(ArrayList<Medicamento> medicamentosAplicados) {
+		this.medicamentosAplicados = medicamentosAplicados;
+	}
+
 }

@@ -1,89 +1,102 @@
 package model.entidades;
 
 import java.util.HashMap;
+
 import java.util.Map;
 import java.util.Scanner;
 import model.recursos.Medicamento;
 import model.recursos.Pedido;
+
+
 public class AuxiliarVeterinario extends Entidade {
+	
+	Scanner sc = new Scanner(System.in);
+	
+	public Consulta getConsulta() {
+		return consulta;
+	}
+
+	public void setConsulta(Consulta consulta) {
+		this.consulta = consulta;
+	}
+
+	private Consulta consulta;
 
 	public AuxiliarVeterinario(String name, String cpf, String senha) {
 		super(name, cpf, senha);
-		
+
 	}
-	  Scanner sc = new Scanner(System.in);
+
 	@Override
 	public void operacoes() {
-        
-        while (true) {
-            System.out.println("Menu de operações (Auxiliar Veterinário)");
-            System.out.println("1. Atender Pet");
-            System.out.println("2. Aplicar Medicamento");
-            System.out.println("3. Sair");
-            System.out.print("Escolha uma opção: ");
-            int opcao = sc.nextInt();
-            sc.nextLine(); 
 
-            switch (opcao) {
-                case 1:
-                    System.out.println("Atendimento ao Pet realizado.");
-                    break;
+		while (true) {
+			System.out.println("Menu de operações (Auxiliar Veterinário)");
+			System.out.println("1. Atender Pet");
+			System.out.println("2. Aplicar Medicamento");
+			System.out.println("3. Sair");
+			System.out.print("Escolha uma opção: ");
+			int opcao = sc.nextInt();
+			sc.nextLine();
 
-                case 2:
-                    aplicarMedicamento(null, null); // Chama o método para aplicar medicação
-                    break;
+			switch (opcao) {
+			case 1:
+				System.out.println("Atendimento ao Pet realizado.");
+				break;
 
-                case 3:
-                    System.out.println("Saindo...");
-                    sc.close(); 
-                    return; 
+			case 2:
+				aplicarMedicamento(null, null); // Chama o método para aplicar medicação
+				break;
 
-                default:
-                    System.out.println("Opção inválida! Tente novamente.");
-            }
-        }
-    }
-            
-            
-    void aplicarMedicamento(Medicamento nome, Entidade auxVeterinario) {
-        
-        System.out.print("Informe o nome do medicamento: ");
-        String nomeMedicamento = sc.nextLine();
+			case 3:
+				System.out.println("Saindo...");
+				sc.close();
+				return;
 
-        System.out.print("Informe a quantidade do medicamento: ");
-        int quantidadeMedicamento = sc.nextInt();
-        sc.nextLine();
+			default:
+				System.out.println("Opção inválida! Tente novamente.");
+			}
+		}
+	}
 
-        //construtor do medicamento
-        Medicamento medicamento = new Medicamento(0, nomeMedicamento, 0, null, null, null);
+	void aplicarMedicamento(Medicamento nome, Entidade auxVeterinario) {
 
-        //armazena o medicamento e sua quantidade
-        Map<Medicamento, Integer> mapMedicamentos = new HashMap<>();
-        mapMedicamentos.put(medicamento, quantidadeMedicamento);
+		System.out.print("Informe o nome do medicamento: ");
+		String nomeMedicamento = sc.nextLine();
 
-        
-        Pedido pedido = new Pedido(auxVeterinario, mapMedicamentos);
+		System.out.print("Informe a quantidade do medicamento: ");
+		int quantidadeMedicamento = sc.nextInt();
+		sc.nextLine();
 
-        //solicitar medicamento
-        solicitarMedicamento(pedido);
+		// construtor do medicamento
+		Medicamento medicamento = new Medicamento(0, nomeMedicamento, 0, null, null, null);
 
-        System.out.println("Aplicando " + quantidadeMedicamento + " doses de " + nomeMedicamento + " para o pet do dono com CPF: ");
-    }
-    
-    private void solicitarMedicamento(Pedido pedido) {
-        System.out.println("Medicamento solicitado: " + pedido);
+		// armazena o medicamento e sua quantidade
+		Map<Medicamento, Integer> mapMedicamentos = new HashMap<>();
+		mapMedicamentos.put(medicamento, quantidadeMedicamento);
+
+		Pedido pedido = new Pedido(auxVeterinario, mapMedicamentos);
+
+		// solicitar medicamento
+		solicitarMedicamento(pedido);
+
+		System.out.println("Aplicando " + quantidadeMedicamento + " doses de " + nomeMedicamento
+				+ " para o pet do dono com CPF: ");
+	}
+
+	private void solicitarMedicamento(Pedido pedido) {
+		System.out.println("Medicamento solicitado: " + pedido);
 
 	}
+
 	@Override
 	public void addUser() {
-		
-		
+
 	}
 
 	@Override
 	public void removerUser() {
-		
-		
+
 	}
 
 }

@@ -6,7 +6,6 @@ import java.util.Scanner;
 import model.recursos.Medicamento;
 public class Veterinario extends Entidade {
 
-	private List<Pet> listaDePets;
 
 	public Veterinario(String name, String cpf, String senha) {
 		super(name, cpf, senha);
