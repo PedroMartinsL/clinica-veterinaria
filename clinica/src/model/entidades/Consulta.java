@@ -6,6 +6,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.LocalDate;
 import java.util.ArrayList;
 
 import db.DB;
@@ -94,16 +95,17 @@ public class Consulta {
 
 	}
 
-	public void solicitarConsulta() {
+	public void solicitarConsulta(Pet pet) {
 
 		PreparedStatement st = null;
 		try {
-			st = conn.prepareStatement("INSERT INTO pet " + "(Animal, doenca, data) " + "VALUES " + "(?, ?, ?, ?, ?)",
+			st = conn.prepareStatement("INSERT INTO Consulta " + "(data, doenca, idPet, idStatus) " + "VALUES " + "(?, ?, ?, ?)",
 					Statement.RETURN_GENERATED_KEYS);
 
-			st.setInt(1, getPet().getId());
+			st.setString(1, LocalDate.now().toString());
 			st.setString(2, getDoenca());
-			st.setDate(3, getData());
+			st.setInt(3, pet.getId());
+			st.setInt(4, 1);
 
 			int rowsAffected = st.executeUpdate();
 
