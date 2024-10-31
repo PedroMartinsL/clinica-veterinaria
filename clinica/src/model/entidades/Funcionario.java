@@ -8,7 +8,7 @@ public class Funcionario extends Entidade {
 
 	@Override
 	public void operacoes() {
-
+		
 	}
 
 	@Override

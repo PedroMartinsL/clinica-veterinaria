@@ -16,8 +16,12 @@ import model.recursos.Pedido;
 
 public class Estoque {
 	static Scanner sc = new Scanner(System.in);
-	
+
 	private static ArrayList<Administrador> admObservers = new ArrayList<>();
+
+	public static void gerenciar() {
+
+	}
 
 	public static Medicamento removerMedicamento(Medicamento medicamento, Entidade responsavel, int quantidade) {
 		// código para remover diretamente do banco de dados
@@ -25,7 +29,7 @@ public class Estoque {
 		checarEstoque(medicamento);
 		return medicamento;
 	}
-	
+
 	public static void removerMedicamento(Medicamento medicamento) {
 		// código para remover diretamente do banco de dados
 		// descartar vencidos
@@ -77,14 +81,14 @@ public class Estoque {
 
 	private static void checarEstoque(Medicamento medicamento) {
 		boolean statement = true;// checagem de medicamento no estoque no bd
-		
+
 		// TO DO
-		
+
 		if (statement) {
 			reporMedicamento(medicamento.clone());
 		}
 	}
-	
+
 	private static void checarValidade(Medicamento medicamento) {
 		LocalDate ld = LocalDate.now();
 		// ler o BD
@@ -97,11 +101,11 @@ public class Estoque {
 			}
 		}
 	}
-	
+
 	private static void checarValidade() {
 		ArrayList<Medicamento> remediosAnalise = new ArrayList<>(); // aqui são passados todos os medicamentos
 	}
-	
+
 	public static void reporMedicamento(Medicamento medicamento) {
 		if (medicamento.isContrato()) {
 			String warning = String.format(" - O medicamento %s está perto de acabar, o estoque será reposto. - %s\n",
@@ -117,11 +121,11 @@ public class Estoque {
 			adm.update(msg);
 		}
 	}
-	
+
 	public static void registerAdm(Administrador adm) {
 		getAdmObservers().add(adm);
 	}
-	
+
 	public static void removeadm(Administrador adm) {
 		getAdmObservers().add(adm);
 	}
@@ -133,7 +137,5 @@ public class Estoque {
 	public static void setAdmObservers(ArrayList<Administrador> admObservers) {
 		Estoque.admObservers = admObservers;
 	}
-	
-	
 
 }

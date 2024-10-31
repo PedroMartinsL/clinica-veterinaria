@@ -3,12 +3,13 @@ package model.entidades;
 import java.util.ArrayList;
 
 import controler.gerenciamento.ContratoGeral;
+import controler.gerenciamento.Estoque;
+import controler.gerenciamento.SistemaRendimento;
+import view.UI;
 
 public class Administrador extends Entidade {
 	
-	private ArrayList<String> notify = new ArrayList<>();
-	
-	 
+	private ArrayList<String> notificacoes = new ArrayList<>();
 
 	public Administrador(String name, String cpf, String senha) {
 		super(name, cpf, senha);
@@ -17,14 +18,31 @@ public class Administrador extends Entidade {
 
 	@Override
 	public void operacoes() {
-		// TODO Auto-generated method stub
-		
+		int request = UI.getRequest(1);
+		switch (request) {
+			case 1:
+				ContratoGeral.gerenciar();
+				break;
+			case 2:
+				SistemaRendimento.gerenciar();
+				break;
+			case 3:
+				Estoque.gerenciar();
+				break;
+			case 4:
+				for (String notificacao: notificacoes) {
+					System.out.println("° " + notificacao);
+				}
+				break;
+			default:
+				System.out.println("Saindo das operações...");
+				break;
+		}	
 	}
 
 	@Override
 	public void addUser() {
 		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
@@ -45,8 +63,12 @@ public class Administrador extends Entidade {
 		
 	}
 	
+	private void dadosUser() {
+		
+	}
+	
 	public void update(String msg) {
-		this.notify.add(msg);
+		this.notificacoes.add(msg);
 	}
 
 }
