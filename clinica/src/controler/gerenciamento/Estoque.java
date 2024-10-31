@@ -13,6 +13,7 @@ import model.entidades.Administrador;
 import model.entidades.Entidade;
 import model.recursos.Medicamento;
 import model.recursos.Pedido;
+import view.UI;
 
 public class Estoque {
 	static Scanner sc = new Scanner(System.in);
@@ -20,7 +21,25 @@ public class Estoque {
 	private static ArrayList<Administrador> admObservers = new ArrayList<>();
 
 	public static void gerenciar() {
-		
+		int request = UI.getRequest(1); // corrigir
+		switch (request) {
+			case 1:
+				System.out.println("Digite o id do medicamento que deseja cancelar o contrato: ");
+				int id = UI.sc.nextInt();
+				UI.sc.nextLine();
+				cancelarContrato(id);
+			
+				break;
+			case 2:
+				System.out.println("Listar estoque: ");
+				listarEstoque();
+				System.out.println("Digite enter para sair");
+				UI.sc.nextLine();
+				break;
+			default:
+				System.out.println("Saindo do gerenciamento de estoque...");
+				break;
+		}	
 	}
 
 	public static Medicamento removerMedicamento(Medicamento medicamento, Entidade responsavel, int quantidade) {
@@ -35,12 +54,9 @@ public class Estoque {
 		// descartar vencidos
 	}
 
-	public static void cancelarContrato(Medicamento medicamento) {
-		medicamento.setContrato(false);
-	}
-
-	public static void rendimento() {
-		// valores de acordo com o BD
+	public static void cancelarContrato(int id) {
+		//encontrar medicamento por id
+		//medicamento.setContrato(false);
 	}
 
 	public static Map<Medicamento, Integer> solicitarMedicamento(Pedido pedido) {
@@ -102,10 +118,6 @@ public class Estoque {
 		}
 	}
 
-	private static void checarValidade() {
-		ArrayList<Medicamento> remediosAnalise = new ArrayList<>(); // aqui são passados todos os medicamentos
-	}
-
 	public static void reporMedicamento(Medicamento medicamento) {
 		if (medicamento.isContrato()) {
 			String warning = String.format(" - O medicamento %s está perto de acabar, o estoque será reposto. - %s\n",
@@ -138,4 +150,7 @@ public class Estoque {
 		Estoque.admObservers = admObservers;
 	}
 
-}
+	public static void listarEstoque() {
+		
+	}
+ }
