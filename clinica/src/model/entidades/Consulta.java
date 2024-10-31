@@ -65,13 +65,13 @@ public class Consulta {
 		PreparedStatement st = null;
 		try {
 			st = conn.prepareStatement(
-					"INSERT INTO pet " + "(Animal, cpf_dono, idade, raça) " + "VALUES " + "(?, ?, ?, ?, ?)",
+					"INSERT INTO pet " + "(animal, cpf_dono, raça, idade) " + "VALUES " + "(?, ?, ?, ?, ?)",
 					Statement.RETURN_GENERATED_KEYS);
 
 			st.setString(1, pet.getAnimal());
 			st.setString(2, pet.getCpfDono());
-			st.setInt(3, pet.getIdade());
-			st.setString(4, pet.getRaca());
+			st.setString(3, pet.getRaca());
+			st.setInt(4, pet.getIdade());
 
 			int rowsAffected = st.executeUpdate();
 
