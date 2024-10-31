@@ -20,7 +20,7 @@ public class Estoque {
 	private static ArrayList<Administrador> admObservers = new ArrayList<>();
 
 	public static void gerenciar() {
-
+		
 	}
 
 	public static Medicamento removerMedicamento(Medicamento medicamento, Entidade responsavel, int quantidade) {

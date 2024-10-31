@@ -51,22 +51,6 @@ public class Administrador extends Entidade {
 		
 	}
 	
-	private void contratar(Entidade entidade) {
-		
-	}
-	
-	private void demitir(Entidade entidade) {
-		
-	}
-	
-	private void rendaClinica() {
-		
-	}
-	
-	private void dadosUser() {
-		
-	}
-	
 	public void update(String msg) {
 		this.notificacoes.add(msg);
 	}
