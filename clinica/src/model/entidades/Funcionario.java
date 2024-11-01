@@ -20,9 +20,6 @@ public class Funcionario extends Entidade {
 			System.out.println("Tudo Adicionado Com Sucesso!");
 				
 		}
-		case 
-		
-
 	}
 
 	@Override
