@@ -24,6 +24,12 @@ public class UI {
 
             opcoes = Arrays.asList("Atender o pet", "Aplicar medicação", "Finalizar Consulta");
             break;
+        case 3:
+            // Menu para operações de rastreamento, cadastro, login, etc.
+
+            opcoes = Arrays.asList("Solicitar Consulta", "Cobrar Consulta","Exibir Historico" ,"Finalizar Consulta");
+            break;
+            
         default:
             // Lança uma exceção se a opção for inválida
             throw new IllegalArgumentException("Opção inválida, tente novamente");

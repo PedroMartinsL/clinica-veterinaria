@@ -30,9 +30,8 @@ public class Consulta {
 
 	private Connection conn = DB.getConnection();
 
-	public Consulta(Pet pet, String doenca) {
+	public Consulta(Pet pet) {
 		this.pet = pet;
-		this.doenca = doenca;
 		// this.data ; // Define a data atual
 	}
 
@@ -61,12 +60,12 @@ public class Consulta {
 		this.data = data;
 	}
 
-	public void registrarPet(Pet pet) {
+	public void registrarPet() {
 
 		PreparedStatement st = null;
 		try {
 			st = conn.prepareStatement(
-					"INSERT INTO pet " + "(animal, cpf_dono, raça, idade) " + "VALUES " + "(?, ?, ?, ?, ?)",
+					"INSERT INTO pet " + "(animal, cpf_dono, raca, idade) " + "VALUES " + "(?, ?, ?, ?)",
 					Statement.RETURN_GENERATED_KEYS);
 
 			st.setString(1, pet.getAnimal());
@@ -95,7 +94,7 @@ public class Consulta {
 
 	}
 
-	public void solicitarConsulta(Pet pet) {
+	public void solicitarConsulta() {
 
 		PreparedStatement st = null;
 		try {
