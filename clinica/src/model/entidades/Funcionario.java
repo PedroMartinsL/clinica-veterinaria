@@ -13,12 +13,22 @@ public class Funcionario extends Entidade {
 		int caso = UI.getRequest(3);
 		switch (caso) {
 		case 1: // Metodo Registar Pet
-			Pet pet = new Pet("12345678901","Baleia","Jubarte",10);
-			Consulta consulta = new Consulta(pet, "Afogada");
-			consulta.registrarPet(pet);
-			consulta.solicitarConsulta(pet);
-			System.out.println("Tudo Adicionado Com Sucesso!");
-				
+			System.out.println("Digite o cpf:");
+			String cpf = UI.sc.nextLine();
+			System.out.println("Digite o animal:");
+			String animal = UI.sc.nextLine();
+			System.out.println("Digite a raca:");
+			String raca = UI.sc.nextLine();
+			System.out.println("Digite a idade:");
+			int idade = UI.sc.nextInt();
+			Pet pet = new Pet(cpf,animal,raca,idade);
+			Consulta consulta = new Consulta(pet);
+			consulta.registrarPet();
+			consulta.solicitarConsulta();
+			System.out.println("Animal registrado Com Sucesso!");
+			break;
+		default:
+			throw new IllegalArgumentException("Number out of range");
 		}
 	}
 
