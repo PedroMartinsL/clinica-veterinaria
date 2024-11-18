@@ -19,7 +19,8 @@ public class ContratoGeral {
 	static Connection conn = DB.getConnection();
 
 	public static void gerenciar() {
-		int request = UI.getRequest(new String[] {"Contratar empregado", "Demitir empregado", "Visualizar dados por id", "Voltar"});
+		int request = UI.getRequest(
+				new String[] { "Contratar empregado", "Demitir empregado", "Visualizar dados por id", "Voltar" });
 		switch (request) {
 		case 1:
 			System.out.println("Digite o cpf para o contrato: ");
@@ -141,18 +142,6 @@ public class ContratoGeral {
 		}
 	}
 
-	private static Entidade criarEntidade(String entity, String nome, String cpf, String senha) {
-		entity = entity.trim().toLowerCase();
-		if (entity.equals("funcionario")) {
-			return new Funcionario(nome, cpf, senha);
-		} else if (entity.equals("auxiliar")) {
-			return new AuxiliarVeterinario(nome, cpf, senha);
-		} else if (entity.equals("veterinario")) {
-			return new Veterinario(nome, cpf, senha);
-		}
-		return null;
-	}
-	
 	private static String tableSimpleName(String simpleName) {
 		if (simpleName.equals("Administrador")) {
 			return "Administradores";
@@ -163,5 +152,50 @@ public class ContratoGeral {
 		} else {
 			throw new IllegalArgumentException("Entidade não instanciada.");
 		}
+	}
+
+	public static Entidade confirmarUser(String cpf, String senha) {
+	    String[] tabelas = {"Funcionarios", "AuxiliaresVeterinarios", "Veterinarios", "Administradores"};
+	    PreparedStatement st = null;
+	    ResultSet rs = null;
+
+	    try {
+	        for (String tabela : tabelas) {
+	            String query = "SELECT * FROM " + tabela + " WHERE cpf = ? AND senha = ?";
+	            st = conn.prepareStatement(query);
+	            st.setString(1, cpf);
+	            st.setString(2, senha);
+
+	            rs = st.executeQuery();
+
+	            if (rs.next()) {
+	                return criarEntidade(tabela, rs.getString("nome"), rs.getString("cpf"), rs.getString("senha"));
+	            }
+	        }
+
+	        // Se nenhum registro for encontrado
+	        System.out.println("CPF ou senha incorretos");
+	        return null;
+
+	    } catch (SQLException e) {
+	        throw new DbException(e.getMessage());
+	    } finally {
+	        DB.closeStatement(st);
+	        DB.closeResultSet(rs);
+	    }
+	}
+	
+	private static Entidade criarEntidade(String entity, String nome, String cpf, String senha) {
+		entity = entity.trim().toLowerCase();
+		if (entity.equals("funcionario")) {
+			return new Funcionario(nome, cpf, senha);
+		} else if (entity.equals("auxiliar")) {
+			return new AuxiliarVeterinario(nome, cpf, senha);
+		} else if (entity.equals("veterinario")) {
+			return new Veterinario(nome, cpf, senha);
+		} else if (entity.equals("administrador")) {
+			return new Veterinario(nome, cpf, senha);
+		}
+		return null;
 	}
 }
