@@ -6,8 +6,7 @@ import view.UI;
 public class SistemaRendimento {
 
 	public static void gerenciar() {
-		String[] requests = {"Rendimento", "Gastos", "Voltar"};
-		int request = UI.getRequest(requests); // corrigir
+		int request = UI.getRequest(new String[] {"Rendimento", "Gastos", "Voltar"}); // corrigir
 		switch (request) {
 			case 1:
 				System.out.println("Mostrando rendimento");

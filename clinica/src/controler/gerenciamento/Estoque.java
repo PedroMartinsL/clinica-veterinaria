@@ -28,8 +28,7 @@ public class Estoque {
 	private static ArrayList<Administrador> admObservers = new ArrayList<>();
 
 	public static void gerenciar() {
-		String[] requests = { "Assinar reposição de medicamento", "Cancelar reposição", "Listagem estoque", "Voltar" };
-		int request = UI.getRequest(requests); // corrigir
+		int request = UI.getRequest(new String[] {"Assinar reposição de medicamento", "Cancelar reposição", "Listagem estoque", "Voltar" });
 		switch (request) {
 		case 1:
 			System.out.print("Digite o id do medicamento que deseja cancelar o contrato: ");

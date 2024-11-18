@@ -8,7 +8,7 @@ import controler.gerenciamento.SistemaRendimento;
 import view.UI;
 
 public class Administrador extends Entidade {
-	
+
 	private ArrayList<String> notificacoes = new ArrayList<>();
 
 	public Administrador(String name, String cpf, String senha) {
@@ -18,27 +18,27 @@ public class Administrador extends Entidade {
 
 	@Override
 	public void operacoes() {
-		String[] requests = {"Operações de contratados", "Exibir renda da clínica", "Operações de Estoque","Exibir notificações", "Finalizar operações"};
-		int request = UI.getRequest(requests);
+		int request = UI.getRequest(new String[] { "Operações de contratados", "Exibir renda da clínica",
+				"Operações de Estoque", "Exibir notificações", "Finalizar operações" });
 		switch (request) {
-			case 1:
-				ContratoGeral.gerenciar();
-				break;
-			case 2:
-				SistemaRendimento.gerenciar();
-				break;
-			case 3:
-				Estoque.gerenciar();
-				break;
-			case 4:
-				for (String notificacao: notificacoes) {
-					System.out.println("° " + notificacao);
-				}
-				break;
-			default:
-				System.out.println("Saindo das operações...");
-				break;
-		}	
+		case 1:
+			ContratoGeral.gerenciar();
+			break;
+		case 2:
+			SistemaRendimento.gerenciar();
+			break;
+		case 3:
+			Estoque.gerenciar();
+			break;
+		case 4:
+			for (String notificacao : notificacoes) {
+				System.out.println("° " + notificacao);
+			}
+			break;
+		default:
+			System.out.println("Saindo das operações...");
+			break;
+		}
 	}
 
 	@Override
@@ -49,9 +49,9 @@ public class Administrador extends Entidade {
 	@Override
 	public void removerUser() {
 		// TODO Auto-generated method stub
-		
+
 	}
-	
+
 	public void update(String msg) {
 		this.notificacoes.add(msg);
 	}
