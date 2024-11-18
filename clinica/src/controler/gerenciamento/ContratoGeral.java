@@ -9,7 +9,8 @@ import view.UI;
 public class ContratoGeral {
 
 	public static void gerenciar() {
-		int request = UI.getRequest(1); // corrigir
+		String[] requests = {"Contratar empregado", "Demitir empregado", "Visualizar dados por id", "Voltar"};
+		int request = UI.getRequest(requests); // corrigir
 		switch (request) {
 			case 1:
 				System.out.println("Digite o cpf para o contrato: ");

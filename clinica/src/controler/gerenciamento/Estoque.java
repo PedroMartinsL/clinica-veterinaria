@@ -1,14 +1,19 @@
 package controler.gerenciamento;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 
+import db.DB;
+import db.DbException;
 import model.entidades.Administrador;
 import model.entidades.Entidade;
 import model.recursos.Medicamento;
@@ -18,113 +23,196 @@ import view.UI;
 public class Estoque {
 	static Scanner sc = new Scanner(System.in);
 
+	static Connection conn = DB.getConnection();
+
 	private static ArrayList<Administrador> admObservers = new ArrayList<>();
 
 	public static void gerenciar() {
-		int request = UI.getRequest(1); // corrigir
+		String[] requests = { "Assinar reposição de medicamento", "Cancelar reposição", "Listagem estoque", "Voltar" };
+		int request = UI.getRequest(requests); // corrigir
 		switch (request) {
-			case 1:
-				System.out.println("Digite o id do medicamento que deseja cancelar o contrato: ");
-				int id = UI.sc.nextInt();
-				UI.sc.nextLine();
-				cancelarContrato(id);
-			
-				break;
-			case 2:
-				System.out.println("Listar estoque: ");
-				listarEstoque();
-				System.out.println("Digite enter para sair");
-				UI.sc.nextLine();
-				break;
-			default:
-				System.out.println("Saindo do gerenciamento de estoque...");
-				break;
-		}	
-	}
+		case 1:
+			System.out.print("Digite o id do medicamento que deseja cancelar o contrato: ");
+			int id = UI.sc.nextInt();
+			UI.sc.nextLine();
+			cancelarContrato(id);
+			break;
+		case 2:
+			System.out.println("Digite o id do medicamento que deseja cancelar o contrato: ");
+			listarEstoque();
+			System.out.println("Digite enter para sair");
+			UI.sc.nextLine();
+			break;
 
-	public static Medicamento removerMedicamento(Medicamento medicamento, Entidade responsavel, int quantidade) {
-		// código para remover diretamente do banco de dados
-		// tabela de retirada
-		checarEstoque(medicamento);
-		return medicamento;
-	}
+		case 3:
+			System.out.println("Listar estoque: ");
+			listarEstoque();
+			System.out.println("Digite enter para sair");
+			UI.sc.nextLine();
+			break;
 
-	public static void removerMedicamento(Medicamento medicamento) {
-		// código para remover diretamente do banco de dados
-		// descartar vencidos
-	}
-
-	public static void cancelarContrato(int id) {
-		//encontrar medicamento por id
-		//medicamento.setContrato(false);
+		default:
+			System.out.println("Saindo do gerenciamento de estoque...");
+			break;
+		}
 	}
 
 	public static Map<Medicamento, Integer> solicitarMedicamento(Pedido pedido) {
-		Map<Medicamento, Integer> solicitacoes = pedido.getPedidos();
 		// consulta pelo banco MYSQL
+		checarValidade();
 
-		List<Map.Entry<Medicamento, Integer>> listaMapeada = new ArrayList<>(solicitacoes.entrySet());
+		List<Map.Entry<Medicamento, Integer>> listaMapeada = new ArrayList<>(pedido.getPedidos().entrySet());
 
-		Map<Medicamento, Integer> remedios = new HashMap<>();
+		Map<Medicamento, Integer> carrinho = new HashMap<>();
 
-		Integer[] disponiveis = new Integer[solicitacoes.size()];
-		for (int i = 0; i < solicitacoes.size(); i++) {
-			if (disponiveis[i] >= listaMapeada.get(i).getValue()) {
-				remedios.put(removerMedicamento(listaMapeada.get(i).getKey(), pedido.getResponsavel(),
-						listaMapeada.get(i).getValue()), disponiveis[i]);
-				// remedios.put(null, null);
-			} else if (disponiveis[i] < listaMapeada.get(i).getValue() && disponiveis[i] > 0) {
+		for (int i = 0; i < listaMapeada.size(); i++) {
+			Medicamento remedioAdd = addCarrinho(listaMapeada.get(i).getKey(), pedido.getResponsavel(),
+					listaMapeada.get(i).getValue());
+			if (remedioAdd != null) {
+				carrinho.put(remedioAdd, listaMapeada.get(i).getValue());
+			}
+		}
+		return carrinho;
+	}
+
+	public static Medicamento addCarrinho(Medicamento medicamento, Entidade responsavel, int quantidade) {
+		// teoricamente a validade já foi checada
+
+		PreparedStatement st = null;
+		ResultSet rs = null;
+		try {
+
+			st = conn.prepareStatement(
+					"SELECT Medicamentos.* from Medicamentos where Medicamentos.nome = ? and Medicamentos.laboratorio = ?  and Medicamentos.concentracao = ?");
+
+			st.setString(1, medicamento.getNome());
+			st.setString(2, medicamento.getLaboratorio());
+			st.setDouble(3, medicamento.getConcentracao());
+
+			rs = st.executeQuery();
+			int reservaEstoque = rs.getInt("quantidade");
+
+			if (quantidade <= reservaEstoque) {
+				retirarMedicamento(medicamento, quantidade);
+				checarEstoque(medicamento);
+				return instanciateMedicamento(rs);
+			} else {
 				System.out.println("A quantidade encontrada do medicamento está abaixo do esperado!");
 				System.out.printf("Medicamento: %s - Quantidade Solicitada: %d - Disponível: %d\n\n",
-						listaMapeada.get(i).getKey().getNome(), listaMapeada.get(i).getValue(), disponiveis[i]);
+						medicamento.getNome(), quantidade, reservaEstoque);
+			}
+		} catch (SQLException e) {
+			throw new DbException(e.getMessage());
+		} finally {
+			DB.closeStatement(st);
+			DB.closeResultSet(rs);
+		}
+		return null;
+	}
 
-				System.out.printf("1 - Retirar apenas %d\n2 - Cancelar solicitação atual\n", disponiveis[i]);
-				String input = sc.nextLine();
-				if (input == "1") {
-					remedios.put(
-							removerMedicamento(listaMapeada.get(i).getKey(), pedido.getResponsavel(), disponiveis[i]),
-							disponiveis[i]);
-				} else {
-					System.out.println("Fim de operação");
+	private static Medicamento instanciateMedicamento(ResultSet rs) throws SQLException {
+		return new Medicamento(rs.getDouble("preco"), rs.getString("laboratorio"), rs.getDouble("concentracao"),
+				rs.getString("nome"), LocalDate.parse((CharSequence) rs.getDate("validade")));
+	}
+
+	public static void retirarMedicamento(Medicamento medicamento, int quantidade) throws SQLException {
+		PreparedStatement st = null;
+
+		st = conn.prepareStatement("UPDATE Medicamentos "
+				+ "SET Quantity = (Select Medicamentos where Medicamentos.nome = ? and Medicamentos.laboratorio = ?  and Medicamentos.concentracao = ?) - ?");
+
+		st.setString(1, medicamento.getNome());
+		st.setString(2, medicamento.getLaboratorio());
+		st.setDouble(3, medicamento.getConcentracao());
+		st.setDouble(4, quantidade);
+
+		// adicionar tabela de retirada com id de cada medicamento e responsável
+
+		st.executeUpdate();
+
+	}
+
+	public static void cancelarContrato(int id) {
+		PreparedStatement st = null;
+		try {
+			st = conn.prepareStatement("UPDATE Medicamentos " + "SET contrato = False where id = ?");
+
+			st.setInt(1, id);
+			st.executeUpdate();
+
+		} catch (SQLException e) {
+			throw new DbException(e.getMessage());
+		} finally {
+			DB.closeStatement(st);
+		}
+	}
+
+	private static void checarEstoque(Medicamento medicamento) throws SQLException {
+
+		PreparedStatement st = null;
+		ResultSet rs = null;
+		try {
+			st = conn.prepareStatement(
+					"SELECT quantidade from Medicamentos where Medicamentos.nome = ? and Medicamentos.laboratorio = ?  and Medicamentos.concentracao = ?");
+
+			st.setString(1, medicamento.getNome());
+			st.setString(2, medicamento.getLaboratorio());
+			st.setDouble(3, medicamento.getConcentracao());
+
+			rs = st.executeQuery();
+			int reservaEstoque = rs.getInt("quantidade");
+			if (reservaEstoque < 10) {
+				if (medicamento.isContrato()) {
+					String warning = String.format(
+							" - O medicamento %s está perto de acabar, o estoque será reposto. - %s\n", medicamento,
+							LocalDateTime.now().toString());
+					notificarAdm(warning);
 				}
-			} else {
-				System.out.printf("Medicamento %s em falta\n"); // medicamento
+				reporMedicamento(medicamento);
 			}
-		}
-		return remedios;
-		// entrar com todos os dados de medicamento
-	}
-
-	private static void checarEstoque(Medicamento medicamento) {
-		boolean statement = true;// checagem de medicamento no estoque no bd
-
-		// TO DO
-
-		if (statement) {
-			reporMedicamento(medicamento.clone());
-		}
-	}
-
-	private static void checarValidade(Medicamento medicamento) {
-		LocalDate ld = LocalDate.now();
-		// ler o BD
-		ArrayList<Medicamento> remediosAnalise = new ArrayList<>(); // aqui são passados os medicamentos pesquisados
-		Iterator<Medicamento> remedio = remediosAnalise.iterator();
-		while (remedio.hasNext()) {
-			Medicamento atualIterator = remedio.next();
-			if (atualIterator.getValidade().isBefore(ld)) {
-				removerMedicamento(medicamento);
-			}
+		} finally {
+			DB.closeStatement(st);
+			DB.closeResultSet(rs);
 		}
 	}
 
 	public static void reporMedicamento(Medicamento medicamento) {
-		if (medicamento.isContrato()) {
-			String warning = String.format(" - O medicamento %s está perto de acabar, o estoque será reposto. - %s\n",
-					medicamento, LocalDateTime.now().toString());
-			notificarAdm(warning);
+		// considerando 10% da carga total
+		PreparedStatement st = null;
+		try {
+			st = conn.prepareStatement("UPDATE Medicamentos "
+					+ "SET Quantity = (Select Medicamentos where Medicamentos.nome = ? and Medicamentos.laboratorio = ?  and Medicamentos.concentracao = ?) * 10");
+
+			st.setString(1, medicamento.getNome());
+			st.setString(2, medicamento.getLaboratorio());
+			st.setDouble(3, medicamento.getConcentracao());
+
+			st.executeUpdate();
+
+		} catch (SQLException e) {
+			throw new DbException(e.getMessage());
+		} finally {
+			DB.closeStatement(st);
 		}
-		// código para incrementar os remédios no BD
+	}
+
+	private static void checarValidade() {
+		// método que executa antes da retirada do medicamento
+		LocalDate ld = LocalDate.now();
+
+		PreparedStatement st = null;
+		try {
+
+			st = conn.prepareStatement("DELETE FROM TABELA WHERE (Select Medicamentos.validade from medicamentos) < ?");
+
+			st.setDate(1, java.sql.Date.valueOf(ld));
+			st.executeUpdate();
+
+		} catch (SQLException e) {
+			throw new DbException(e.getMessage());
+		} finally {
+			DB.closeStatement(st);
+		}
 	}
 
 	public static void notificarAdm(String msg) {
@@ -138,7 +226,7 @@ public class Estoque {
 		getAdmObservers().add(adm);
 	}
 
-	public static void removeadm(Administrador adm) {
+	public static void removeAdm(Administrador adm) {
 		getAdmObservers().add(adm);
 	}
 
@@ -151,6 +239,6 @@ public class Estoque {
 	}
 
 	public static void listarEstoque() {
-		
+
 	}
- }
+}

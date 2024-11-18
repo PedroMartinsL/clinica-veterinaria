@@ -5,20 +5,17 @@ import java.time.LocalDate;
 public class Medicamento implements Prototype {
 	private double preco;
 	private String laboratorio;
-	private int concentracao;
+	private double concentracao;
 	private String nome;
-	private String[] aplicabilidade;
 	private LocalDate validade;
 	private boolean contrato = true;
 	
-	public Medicamento(double preco, String laboratorio, int concentracao, String nome, String[] aplicabilidade,
-			LocalDate validade) {
+	public Medicamento(double preco, String laboratorio, double concentracao, String nome, LocalDate validade) {
 		super();
 		this.preco = preco;
 		this.laboratorio = laboratorio;
 		this.concentracao = concentracao;
 		this.nome = nome;
-		this.aplicabilidade = aplicabilidade;
 		this.validade = validade;
 	}
 
@@ -30,7 +27,7 @@ public class Medicamento implements Prototype {
 		this.validade = validade;
 	}
 
-	public Medicamento(String laboratorio, int concentracao, String nome) {
+	public Medicamento(String laboratorio, double concentracao, String nome) {
 		this.laboratorio = laboratorio;
 		this.concentracao = concentracao;
 		this.nome = nome;
@@ -60,11 +57,11 @@ public class Medicamento implements Prototype {
 		this.laboratorio = laboratorio;
 	}
 
-	public int getConcentracao() {
+	public double getConcentracao() {
 		return concentracao;
 	}
 
-	public void setConcentracao(int concentracao) {
+	public void setConcentracao(double concentracao) {
 		this.concentracao = concentracao;
 	}
 
@@ -74,14 +71,6 @@ public class Medicamento implements Prototype {
 
 	public void setNome(String nome) {
 		this.nome = nome;
-	}
-
-	public String[] getAplicabilidade() {
-		return aplicabilidade;
-	}
-
-	public void setAplicabilidade(String[] aplicabilidade) {
-		this.aplicabilidade = aplicabilidade;
 	}
 	
 	public void aplicarMedicamento() {
@@ -95,6 +84,6 @@ public class Medicamento implements Prototype {
 
 	@Override
 	public Medicamento clone() {
-		return new Medicamento(preco, laboratorio, concentracao, nome, aplicabilidade, validade);
+		return new Medicamento(preco, laboratorio, concentracao, nome, validade);
 	}
 }

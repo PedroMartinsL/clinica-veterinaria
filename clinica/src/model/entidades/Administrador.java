@@ -18,7 +18,8 @@ public class Administrador extends Entidade {
 
 	@Override
 	public void operacoes() {
-		int request = UI.getRequest(1);
+		String[] requests = {"Operações de contratados", "Exibir renda da clínica", "Operações de Estoque","Exibir notificações", "Finalizar operações"};
+		int request = UI.getRequest(requests);
 		switch (request) {
 			case 1:
 				ContratoGeral.gerenciar();
