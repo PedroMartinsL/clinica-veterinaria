@@ -41,17 +41,6 @@ public class Administrador extends Entidade {
 		}
 	}
 
-	@Override
-	public void addUser() {
-		// TODO Auto-generated method stub
-	}
-
-	@Override
-	public void removerUser() {
-		// TODO Auto-generated method stub
-
-	}
-
 	public void update(String msg) {
 		this.notificacoes.add(msg);
 	}
