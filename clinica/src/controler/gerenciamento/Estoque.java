@@ -1,6 +1,7 @@
 package controler.gerenciamento;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -28,7 +29,8 @@ public class Estoque {
 	private static ArrayList<Administrador> admObservers = new ArrayList<>();
 
 	public static void gerenciar() {
-		int request = UI.getRequest(new String[] {"Assinar reposição de medicamento", "Cancelar reposição", "Listagem estoque", "Voltar" });
+		int request = UI.getRequest(new String[] { "Assinar reposição de medicamento", "Cancelar reposição",
+				"Listagem estoque", "Voltar" });
 		switch (request) {
 		case 1:
 			System.out.print("Digite o id do medicamento que deseja cancelar o contrato: ");
@@ -238,6 +240,72 @@ public class Estoque {
 	}
 
 	public static void listarEstoque() {
+	    PreparedStatement st = null;
+	    ResultSet rs = null;
 
+	    try {
+	        st = conn.prepareStatement("SELECT nome, preco, laborator, validade, concentra, contrato FROM Medicamentos");
+	        rs = st.executeQuery();
+
+	        System.out.println("Medicamentos disponíveis:");
+	        System.out.printf("%-20s %-10s %-15s %-15s %-10s %-10s%n", 
+	                          "Nome", "Preço", "Laboratório", "Validade", "Concentração", "Contrato");
+	        System.out.println("-----------------------------------------------------------------------------------");
+
+	        while (rs.next()) {
+	            String nome = rs.getString("nome");
+	            double preco = rs.getDouble("preco");
+	            String laboratorio = rs.getString("laborator");
+	            Date validade = rs.getDate("validade");
+	            double concentracao = rs.getDouble("concentra");
+	            boolean contrato = rs.getBoolean("contrato");
+
+	            System.out.printf("%-20s %-10.2f %-15s %-15s %-10.2f %-10s%n", 
+	                              nome, preco, laboratorio, validade, concentracao, contrato ? "Sim" : "Não");
+	        }
+
+	    } catch (SQLException e) {
+	        throw new DbException(e.getMessage());
+	    } finally {
+	        DB.closeStatement(st);
+	        DB.closeResultSet(rs);
+	    }
 	}
+	
+	public static void listarEstoque(String nomeMedicacao) {
+	    PreparedStatement st = null;
+	    ResultSet rs = null;
+
+	    try {
+	        st = conn.prepareStatement("SELECT nome, preco, laborator, validade, concentra, contrato FROM Medicamentos where nome = ?");
+	        
+	        st.setString(1, nomeMedicacao);
+	        
+	        rs = st.executeQuery();
+
+	        System.out.println("Medicamentos disponíveis:");
+	        System.out.printf("%-20s %-10s %-15s %-15s %-10s %-10s%n", 
+	                          "Nome", "Preço", "Laboratório", "Validade", "Concentração", "Contrato");
+	        System.out.println("-----------------------------------------------------------------------------------");
+
+	        while (rs.next()) {
+	            String nome = rs.getString("nome");
+	            double preco = rs.getDouble("preco");
+	            String laboratorio = rs.getString("laborator");
+	            Date validade = rs.getDate("validade");
+	            double concentracao = rs.getDouble("concentra");
+	            boolean contrato = rs.getBoolean("contrato");
+
+	            System.out.printf("%-20s %-10.2f %-15s %-15s %-10.2f %-10s%n", 
+	                              nome, preco, laboratorio, validade, concentracao, contrato ? "Sim" : "Não");
+	        }
+
+	    } catch (SQLException e) {
+	        throw new DbException(e.getMessage());
+	    } finally {
+	        DB.closeStatement(st);
+	        DB.closeResultSet(rs);
+	    }
+	}
+
 }
