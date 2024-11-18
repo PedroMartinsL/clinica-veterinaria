@@ -195,6 +195,7 @@ public class Estoque {
 		} finally {
 			DB.closeStatement(st);
 		}
+		//depois adicionar a tabela de despesa
 	}
 
 	private static void checarValidade() {
