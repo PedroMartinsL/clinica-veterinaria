@@ -112,7 +112,7 @@ public class Estoque {
 	}
 
 	private static Medicamento instanciateMedicamento(ResultSet rs) throws SQLException {
-		return new Medicamento(rs.getDouble("preco"), rs.getString("laboratorio"), rs.getDouble("concentracao"),
+		return new Medicamento(rs.getInt("id"), rs.getDouble("preco"), rs.getString("laboratorio"), rs.getDouble("concentracao"),
 				rs.getString("nome"), LocalDate.parse((CharSequence) rs.getDate("validade")));
 	}
 

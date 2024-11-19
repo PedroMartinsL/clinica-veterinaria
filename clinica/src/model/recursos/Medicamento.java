@@ -3,20 +3,35 @@ package model.recursos;
 import java.time.LocalDate;
 
 public class Medicamento implements Prototype {
+	private int id;
 	private double preco;
 	private String laboratorio;
 	private double concentracao;
 	private String nome;
 	private LocalDate validade;
 	private boolean contrato = true;
-	
-	public Medicamento(double preco, String laboratorio, double concentracao, String nome, LocalDate validade) {
-		super();
+
+	public Medicamento(int id, double preco, String laboratorio, double concentracao, String nome, LocalDate validade) {
+		this.id = id;
 		this.preco = preco;
 		this.laboratorio = laboratorio;
 		this.concentracao = concentracao;
 		this.nome = nome;
 		this.validade = validade;
+	}
+
+	public Medicamento(String laboratorio, double concentracao, String nome) {
+		this.laboratorio = laboratorio;
+		this.concentracao = concentracao;
+		this.nome = nome;
+	}
+
+	public Medicamento(int id) {
+		super();
+		this.id = id;
+	}
+
+	public Medicamento() {
 	}
 
 	public LocalDate getValidade() {
@@ -25,12 +40,6 @@ public class Medicamento implements Prototype {
 
 	public void setValidade(LocalDate validade) {
 		this.validade = validade;
-	}
-
-	public Medicamento(String laboratorio, double concentracao, String nome) {
-		this.laboratorio = laboratorio;
-		this.concentracao = concentracao;
-		this.nome = nome;
 	}
 
 	public double getPreco() {
@@ -72,18 +81,26 @@ public class Medicamento implements Prototype {
 	public void setNome(String nome) {
 		this.nome = nome;
 	}
-	
+
 	public void aplicarMedicamento() {
 		System.out.printf("%s %d mg aplicado pelo Auxiliar.\n", getNome(), getConcentracao());
 	}
-	
+
 	public void estocar() {
 		System.out.println("Adicionando medicamento ao estoque");
-		//método para adicionar ao estoque
+		// método para adicionar ao estoque
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
 	}
 
 	@Override
 	public Medicamento clone() {
-		return new Medicamento(preco, laboratorio, concentracao, nome, validade);
+		return new Medicamento(id, preco, laboratorio, concentracao, nome, validade);
 	}
 }
