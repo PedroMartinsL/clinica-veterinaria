@@ -9,10 +9,18 @@ public class Medicamento implements Prototype {
 	private double concentracao;
 	private String nome;
 	private LocalDate validade;
-	private boolean contrato = true;
+	private boolean contrato;
 
 	public Medicamento(int id, double preco, String laboratorio, double concentracao, String nome, LocalDate validade) {
 		this.id = id;
+		this.preco = preco;
+		this.laboratorio = laboratorio;
+		this.concentracao = concentracao;
+		this.nome = nome;
+		this.validade = validade;
+	}
+	
+	public Medicamento(double preco, String laboratorio, double concentracao, String nome, LocalDate validade) {
 		this.preco = preco;
 		this.laboratorio = laboratorio;
 		this.concentracao = concentracao;

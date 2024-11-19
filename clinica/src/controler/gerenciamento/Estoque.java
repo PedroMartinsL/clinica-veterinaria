@@ -5,8 +5,10 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -30,7 +32,7 @@ public class Estoque {
 
 	public static void gerenciar() {
 		int request = UI.getRequest(new String[] { "Assinar reposição de medicamento", "Cancelar reposição",
-				"Listagem estoque", "Voltar" });
+				"Listagem estoque","Adicionar linha de Medicamento", "Voltar" });
 		switch (request) {
 		case 1:
 			System.out.print("Digite o id do medicamento que deseja cancelar o contrato: ");
@@ -48,6 +50,12 @@ public class Estoque {
 		case 3:
 			System.out.println("Listar estoque: ");
 			listarEstoque();
+			System.out.println("Digite enter para sair");
+			UI.sc.nextLine();
+			break;
+		case 5:
+			System.out.println("Adicionar medicamentos: ");
+			adicionarMedicamento();
 			System.out.println("Digite enter para sair");
 			UI.sc.nextLine();
 			break;
@@ -307,6 +315,58 @@ public class Estoque {
 	        DB.closeStatement(st);
 	        DB.closeResultSet(rs);
 	    }
+	} 
+	
+	private static void adicionarMedicamento() {
+		PreparedStatement st = null;
+		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+		try {
+			System.out.println("Digite o nome do medicamento: ");
+			String nome = UI.sc.nextLine();
+			System.out.println("Digite o laboratório: ");
+			String laboratorio = UI.sc.nextLine();
+			System.out.println("Digite a validade no formato dia/mês/ano (numerado): ");
+			LocalDate validade = LocalDate.parse(UI.sc.nextLine(), dtf);
+			System.out.println("Digite o preço: ");
+			double preco = UI.sc.nextDouble();
+			System.out.println("Digite a concentração: ");
+			double concentracao = UI.sc.nextDouble();
+			UI.sc.nextLine();
+			
+			Medicamento medicamento = new Medicamento(preco, laboratorio, concentracao, nome, validade);
+	
+			st = conn.prepareStatement("INSERT INTO Medicamentos " + "(preco, laboratorio, concentracao, nome, validade, contrato) " + "VALUES " + "(?, ?, ?, ?, ?, ?)",
+					Statement.RETURN_GENERATED_KEYS);
+
+			st.setDouble(1, medicamento.getPreco());
+			st.setString(2, medicamento.getLaboratorio());
+			st.setDouble(3, medicamento.getConcentracao());
+			st.setString(4, medicamento.getNome());
+			st.setDate(5, java.sql.Date.valueOf(medicamento.getValidade()));
+			st.setBoolean(6, true);
+			
+
+			int rowsAffected = st.executeUpdate();
+
+			if (rowsAffected > 0) {
+				ResultSet rs = st.getGeneratedKeys();
+				if (rs.next()) {
+					int id = rs.getInt(1); // recuperar o valor da primeira coluna
+					medicamento.setId(id);
+				}
+				DB.closeResultSet(rs);
+			} else {
+				throw new DbException("Unexpected error! No rows affected!");
+			}
+
+		} catch (SQLException e) {
+			throw new DbException(e.getMessage());
+		} catch (IllegalArgumentException e) {
+			System.out.println("Argumento inválido, tente novamente");
+			UI.sc.nextLine();
+		} finally {
+			DB.closeStatement(st);
+		}
 	}
 
 }
