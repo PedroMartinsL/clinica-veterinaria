@@ -102,7 +102,7 @@ public class Estoque {
 			int reservaEstoque = rs.getInt("quantidade");
 
 			if (quantidade <= reservaEstoque) {
-				retirarMedicamento(medicamento, quantidade);
+				retirarMedicamento(medicamento, quantidade, responsavel);
 				checarEstoque(medicamento);
 				return instanciateMedicamento(rs);
 			} else {
@@ -124,7 +124,7 @@ public class Estoque {
 				rs.getString("nome"), LocalDate.parse((CharSequence) rs.getDate("validade")));
 	}
 
-	public static void retirarMedicamento(Medicamento medicamento, int quantidade) throws SQLException {
+	public static void retirarMedicamento(Medicamento medicamento, int quantidade, Entidade responsavel) throws SQLException {
 		PreparedStatement st = null;
 
 		st = conn.prepareStatement("UPDATE Medicamentos "
@@ -135,10 +135,17 @@ public class Estoque {
 		st.setDouble(3, medicamento.getConcentracao());
 		st.setDouble(4, quantidade);
 
-		// adicionar tabela de retirada com id de cada medicamento e responsável
+		st.executeUpdate();
+		
+		st = conn.prepareStatement("INSERT INTO Retirada (data_retirada, id_medicamento, quantidade, responsavel) "
+				+ "values (?,?,?,?)");
+
+		st.setDate(1, java.sql.Date.valueOf(LocalDate.now()));
+		st.setInt(2, medicamento.getId());
+		st.setInt(3, quantidade);
+		st.setString(4, responsavel.getCpf());
 
 		st.executeUpdate();
-
 	}
 
 	public static void cancelarContrato(int id) {
