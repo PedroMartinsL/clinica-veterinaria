@@ -55,7 +55,6 @@ public class AdministradorService {
 	}
 
 	private void updateData(Administrador entity, Administrador obj) {
-		entity.setCpf(obj.getCpf());
 		entity.setNome(obj.getNome());
 		entity.setSenha(obj.getSenha());
 		

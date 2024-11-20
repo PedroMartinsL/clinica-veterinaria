@@ -10,27 +10,27 @@ import org.springframework.stereotype.Service;
 
 import com.clinica.springboot.controller.exceptions.DatabaseException;
 import com.clinica.springboot.controller.exceptions.ResourceNotFoundException;
-import com.clinica.springboot.controller.repositories.PetRepository;
-import com.clinica.springboot.model.entities.Pet;
+import com.clinica.springboot.controller.repositories.MedicamentoRepository;
+import com.clinica.springboot.model.entities.Medicamento;
 
 import jakarta.persistence.EntityNotFoundException;
 
 @Service
-public class PetService {
+public class MedicamentoService {
 	
 	@Autowired
-	private PetRepository repository;
+	private MedicamentoRepository repository;
 
-	public List<Pet> findAll() {
+	public List<Medicamento> findAll() {
 		return repository.findAll();
 	}
 
-	public Pet findById(Long id) {
-		Optional<Pet> obj = repository.findById(id);
-		return obj.orElseThrow(() -> new ResourceNotFoundException(id)); // retorna o objeto do tipo Pet que estiver																	// dentro do optional
+	public Medicamento findById(Long id) {
+		Optional<Medicamento> obj = repository.findById(id);
+		return obj.orElseThrow(() -> new ResourceNotFoundException(id)); // retorna o objeto do tipo Medicamento que estiver																	// dentro do optional
 	}
 
-	public Pet insert(Pet obj) {
+	public Medicamento insert(Medicamento obj) {
 		return repository.save(obj);
 	}
 
@@ -44,9 +44,9 @@ public class PetService {
 		}
 	}
 
-	public Pet update(Long id, Pet obj) {
+	public Medicamento update(Long id, Medicamento obj) {
 		try {
-			Pet entity = repository.getReferenceById(id); //monitorar um obj pelo jpa para depois efetuar uma op no bd
+			Medicamento entity = repository.getReferenceById(id); //monitorar um obj pelo jpa para depois efetuar uma op no bd
 			updateData(entity, obj);
 			return repository.save(entity);
 		} catch (EntityNotFoundException e) {
@@ -54,10 +54,12 @@ public class PetService {
 		}
 	}
 
-	private void updateData(Pet entity, Pet obj) {
-		entity.setAnimal(obj.getAnimal());
-		entity.setCpf_dono(obj.getCpf_dono());
-		entity.setIdade(obj.getIdade());
-		entity.setRaca(obj.getRaca());
+	private void updateData(Medicamento entity, Medicamento obj) {
+		entity.setConcentracao(obj.getConcentracao());
+		entity.setContrato(obj.isContrato());
+		entity.setPreco(obj.getPreco());
+		entity.setNome(obj.getNome());
+		entity.setValidade(obj.getValidade());
+		entity.setLaboratorio(obj.getLaboratorio());
 	}
 }
