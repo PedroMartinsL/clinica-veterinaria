@@ -74,10 +74,10 @@ public class ClinicaConfig implements CommandLineRunner {
 				true);
 		Medicamento cefalexina = new Medicamento(null, "Cefalexina", "Cimed", 500.0, 40.00,
 				Instant.parse("2024-08-17T20:30:00Z"), true);
-		Medicamento probiotico = new Medicamento(null, "Probiótico", "Biofarma", 25.0, 15.50,
-				Instant.parse("2025-10-15T10:23:00Z"), true);
-		Medicamento creatina = new Medicamento(null, "Creatina Equina", "VetUP", 25.0, 15.50,
-				Instant.parse("2025-10-15T18:10:00Z"), true);
+		Medicamento probiotico = new Medicamento(null, "Probiótico", "Biofarma", 25.0, 8.20,
+				Instant.parse("2025-01-15T10:23:00Z"), true);
+		Medicamento creatina = new Medicamento(null, "Creatina Equina", "VetUP", 25.0, 80.00,
+				Instant.parse("2026-10-21T18:10:00Z"), true);
 
 		medRepository.saveAll(Arrays.asList(dipirona, vonal, cefalexina, probiotico, creatina));
 
