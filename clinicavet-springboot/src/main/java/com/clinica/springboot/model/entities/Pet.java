@@ -1,12 +1,17 @@
 package com.clinica.springboot.model.entities;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 
 @Entity
 public class Pet implements Serializable {
@@ -21,6 +26,10 @@ public class Pet implements Serializable {
 	private String cpf_dono;
 	private String raca;
 	private int idade;
+	
+	@JsonIgnore
+	@OneToMany(mappedBy = "pet")
+	private List<Consulta> consultas = new ArrayList<>();
 
 	public Pet() {
 	}

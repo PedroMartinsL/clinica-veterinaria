@@ -1,10 +1,15 @@
 package com.clinica.springboot.model.entities;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 
 @Entity
 public class Veterinario implements Serializable {
@@ -16,6 +21,10 @@ public class Veterinario implements Serializable {
 	
 	private String nome;
 	private String senha;
+	
+	@JsonIgnore
+	@OneToMany(mappedBy = "veterinario")
+	private List<Consulta> consultas = new ArrayList<>();
 
 	public Veterinario() {
 	}

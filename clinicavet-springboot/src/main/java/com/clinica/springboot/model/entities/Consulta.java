@@ -30,6 +30,7 @@ public class Consulta implements Serializable {
 	@ManyToOne
 	@JoinColumn(name = "veterinario_id")
 	private Veterinario veterinario;
+	
 	private Integer consultaStatus;
 
 	@ManyToOne
@@ -39,13 +40,13 @@ public class Consulta implements Serializable {
 	public Consulta() {
 	}
 
-	public Consulta(Long id, Instant data, String doenca, Veterinario veterinario, Integer consultaStatus, Pet pet) {
+	public Consulta(Long id, Instant data, String doenca, Veterinario veterinario, ConsultaStatus consultaStatus, Pet pet) {
 		super();
 		this.id = id;
 		this.data = data;
 		this.doenca = doenca;
 		this.veterinario = veterinario;
-		this.consultaStatus = consultaStatus;
+		setConsultaStatus(consultaStatus);
 		this.pet = pet;
 	}
 
