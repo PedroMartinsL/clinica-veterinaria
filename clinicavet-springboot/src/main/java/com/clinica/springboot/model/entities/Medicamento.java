@@ -2,7 +2,6 @@ package com.clinica.springboot.model.entities;
 
 import java.io.Serializable;
 import java.time.Instant;
-import java.time.LocalDate;
 import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
