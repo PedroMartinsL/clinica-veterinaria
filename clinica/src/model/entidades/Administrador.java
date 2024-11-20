@@ -17,7 +17,7 @@ public class Administrador extends Entidade {
 	}
 
 	@Override
-	public void operacoes() {
+	public boolean operacoes() {
 		int request = UI.getRequest(new String[] { "Operações de contratados", "Exibir renda da clínica",
 				"Operações de Estoque", "Exibir notificações", "Finalizar operações" });
 		switch (request) {
@@ -37,8 +37,9 @@ public class Administrador extends Entidade {
 			break;
 		default:
 			System.out.println("Saindo das operações...");
-			break;
+			return false;
 		}
+		return true;
 	}
 
 	public void update(String msg) {

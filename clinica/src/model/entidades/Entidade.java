@@ -49,9 +49,9 @@ public abstract class Entidade implements Operacoes {
 		this.id = id;
 	}
 
-	protected String[] loginUser() {
-		String[] dados = new String[2];
+	public static Entidade loginUser() {
 		short contador = 3;
+		Entidade entidade = null;
 		try {
 			System.out.println("- Login -:");
 			do {
@@ -60,23 +60,18 @@ public abstract class Entidade implements Operacoes {
 				System.out.print("Senha: ");
 				String senha = UI.sc.next();
 				UI.sc.nextLine();
-				if (ContratoGeral.confirmarUser(cpf, senha) != null) {
+				entidade = ContratoGeral.confirmarUser(cpf, senha);
+				if (entidade != null) {
 					break;
 				} else {
 					System.out.println("E-mail/Senha errados, tente novamente!");
 					contador--;
 				}
 			} while (contador > 0);
-			if (dados[0] == null || dados[1] == null) {
-				throw new IllegalArgumentException(
-						"Seus dados não correnspondem ao sistema. Tente novamente mais tarde.");
-			} else {
-				System.out.println("Bem-vindo ao Sistema Clínica Veterinária.");
-			}
 		} catch (IllegalArgumentException e) {
 			System.out.println("Erro por um argumento ilegal: " + e.getMessage());
 		}
-		return dados;
+		return entidade;
 	}
 
 }
