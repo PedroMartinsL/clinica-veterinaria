@@ -1,4 +1,4 @@
-package com.clinica.springboot.controller.services;
+package com.clinica.springboot.services;
 
 import java.util.List;
 import java.util.Optional;
@@ -10,8 +10,8 @@ import org.springframework.stereotype.Service;
 
 import com.clinica.springboot.controller.exceptions.DatabaseException;
 import com.clinica.springboot.controller.exceptions.ResourceNotFoundException;
-import com.clinica.springboot.controller.repositories.MedicamentoRepository;
 import com.clinica.springboot.model.entities.Medicamento;
+import com.clinica.springboot.repositories.MedicamentoRepository;
 
 import jakarta.persistence.EntityNotFoundException;
 

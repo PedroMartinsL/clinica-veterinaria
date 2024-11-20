@@ -23,7 +23,7 @@ public class Consulta implements Serializable {
 	private Long id;
 
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'", timezone = "GMT")
-	private Instant moment;
+	private Instant data;
 
 	private String doenca;
 	
@@ -39,10 +39,10 @@ public class Consulta implements Serializable {
 	public Consulta() {
 	}
 
-	public Consulta(Long id, Instant moment, String doenca, Veterinario veterinario, Integer consultaStatus, Pet pet) {
+	public Consulta(Long id, Instant data, String doenca, Veterinario veterinario, Integer consultaStatus, Pet pet) {
 		super();
 		this.id = id;
-		this.moment = moment;
+		this.data = data;
 		this.doenca = doenca;
 		this.veterinario = veterinario;
 		this.consultaStatus = consultaStatus;
@@ -81,12 +81,12 @@ public class Consulta implements Serializable {
 		this.id = id;
 	}
 
-	public Instant getMoment() {
-		return moment;
+	public Instant getData() {
+		return data;
 	}
 
-	public void setMoment(Instant moment) {
-		this.moment = moment;
+	public void setData(Instant data) {
+		this.data = data;
 	}
 
 	public ConsultaStatus getConsultaStatus() {

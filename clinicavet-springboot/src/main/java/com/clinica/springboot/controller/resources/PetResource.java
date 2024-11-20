@@ -15,8 +15,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import com.clinica.springboot.controller.services.PetService;
 import com.clinica.springboot.model.entities.Pet;
+import com.clinica.springboot.services.PetService;
 
 @RestController
 @RequestMapping(value = "/pets")

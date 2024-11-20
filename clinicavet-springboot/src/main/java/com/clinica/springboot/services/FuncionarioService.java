@@ -1,4 +1,4 @@
-package com.clinica.springboot.controller.services;
+package com.clinica.springboot.services;
 
 import java.util.List;
 import java.util.Optional;
@@ -10,27 +10,27 @@ import org.springframework.stereotype.Service;
 
 import com.clinica.springboot.controller.exceptions.DatabaseException;
 import com.clinica.springboot.controller.exceptions.ResourceNotFoundException;
-import com.clinica.springboot.controller.repositories.AuxVeterinarioRepository;
-import com.clinica.springboot.model.entities.AuxVeterinario;
+import com.clinica.springboot.model.entities.Funcionario;
+import com.clinica.springboot.repositories.FuncionarioRepository;
 
 import jakarta.persistence.EntityNotFoundException;
 
 @Service
-public class AuxVeterinarioService {
+public class FuncionarioService {
 	
 	@Autowired
-	private AuxVeterinarioRepository repository;
+	private FuncionarioRepository repository;
 
-	public List<AuxVeterinario> findAll() {
+	public List<Funcionario> findAll() {
 		return repository.findAll();
 	}
 
-	public AuxVeterinario findById(String id) {
-		Optional<AuxVeterinario> obj = repository.findById(id);
-		return obj.orElseThrow(() -> new ResourceNotFoundException(id)); // retorna o objeto do tipo AuxVeterinario que estiver																	// dentro do optional
+	public Funcionario findById(String id) {
+		Optional<Funcionario> obj = repository.findById(id);
+		return obj.orElseThrow(() -> new ResourceNotFoundException(id)); // retorna o objeto do tipo Funcionario que estiver																	// dentro do optional
 	}
 
-	public AuxVeterinario insert(AuxVeterinario obj) {
+	public Funcionario insert(Funcionario obj) {
 		return repository.save(obj);
 	}
 
@@ -44,9 +44,9 @@ public class AuxVeterinarioService {
 		}
 	}
 
-	public AuxVeterinario update(String id, AuxVeterinario obj) {
+	public Funcionario update(String id, Funcionario obj) {
 		try {
-			AuxVeterinario entity = repository.getReferenceById(id); //monitorar um obj pelo jpa para depois efetuar uma op no bd
+			Funcionario entity = repository.getReferenceById(id); //monitorar um obj pelo jpa para depois efetuar uma op no bd
 			updateData(entity, obj);
 			return repository.save(entity);
 		} catch (EntityNotFoundException e) {
@@ -54,7 +54,7 @@ public class AuxVeterinarioService {
 		}
 	}
 
-	private void updateData(AuxVeterinario entity, AuxVeterinario obj) {
+	private void updateData(Funcionario entity, Funcionario obj) {
 		entity.setNome(obj.getNome());
 		entity.setSenha(obj.getSenha());
 		

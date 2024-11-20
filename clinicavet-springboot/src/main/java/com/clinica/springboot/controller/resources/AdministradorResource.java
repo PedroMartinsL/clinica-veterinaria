@@ -15,8 +15,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import com.clinica.springboot.controller.services.AdministradorService;
 import com.clinica.springboot.model.entities.Administrador;
+import com.clinica.springboot.services.AdministradorService;
 
 @RestController
 @RequestMapping(value = "/adms")

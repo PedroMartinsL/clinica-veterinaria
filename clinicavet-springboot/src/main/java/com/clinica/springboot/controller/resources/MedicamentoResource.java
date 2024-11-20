@@ -15,8 +15,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import com.clinica.springboot.controller.services.MedicamentoService;
 import com.clinica.springboot.model.entities.Medicamento;
+import com.clinica.springboot.services.MedicamentoService;
 
 @RestController
 @RequestMapping(value = "/medicamentos")

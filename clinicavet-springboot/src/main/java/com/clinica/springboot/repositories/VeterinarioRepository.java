@@ -1,4 +1,4 @@
-package com.clinica.springboot.controller.repositories;
+package com.clinica.springboot.repositories;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
