@@ -1,8 +1,11 @@
 package com.clinica.springboot.model.entities;
 
 import java.io.Serializable;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.util.Objects;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -22,13 +25,15 @@ public class Medicamento implements Serializable {
 	private String laboratorio;
 	private Double concentracao;
 	private Double preco;
-	private LocalDate validade;
+	
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'", timezone = "GMT")
+	private Instant validade;
 	private boolean contrato;
 
 	public Medicamento() {
 	}
 
-	public Medicamento(Long id, String nome, String laboratorio, Double concentracao, Double preco, LocalDate validade,
+	public Medicamento(Long id, String nome, String laboratorio, Double concentracao, Double preco, Instant validade,
 			boolean contrato) {
 		super();
 		this.id = id;
@@ -80,11 +85,11 @@ public class Medicamento implements Serializable {
 		this.preco = preco;
 	}
 
-	public LocalDate getValidade() {
+	public Instant getValidade() {
 		return validade;
 	}
 
-	public void setValidade(LocalDate validade) {
+	public void setValidade(Instant validade) {
 		this.validade = validade;
 	}
 
