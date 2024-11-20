@@ -15,31 +15,30 @@ public class Pet implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int id;
+	private Long id;
+	
 	private String animal;
 	private String cpf_dono;
 	private String raca;
 	private int idade;
-	private String idVeterinario;
 
 	public Pet() {
 	}
 
-	public Pet(int id, String animal, String cpf_dono, String raca, int idade, String idVeterinario) {
+	public Pet(Long id, String animal, String cpf_dono, String raca, int idade) {
 		super();
 		this.id = id;
 		this.animal = animal;
 		this.cpf_dono = cpf_dono;
 		this.raca = raca;
 		this.idade = idade;
-		this.idVeterinario = idVeterinario;
 	}
 
-	public int getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 
@@ -73,14 +72,6 @@ public class Pet implements Serializable {
 
 	public void setIdade(int idade) {
 		this.idade = idade;
-	}
-
-	public String getIdVeterinario() {
-		return idVeterinario;
-	}
-
-	public void setIdVeterinario(String idVeterinario) {
-		this.idVeterinario = idVeterinario;
 	}
 
 	@Override
