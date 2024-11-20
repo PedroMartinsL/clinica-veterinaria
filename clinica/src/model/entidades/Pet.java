@@ -50,13 +50,7 @@ public class Pet {
 
     public void setIdade(Integer idade) {
         this.idade = idade;
-    }
-    
-    
-
-    //public Consulta solicitarAtendimento(String doenca) {
-    	
-        
+    }   
        
     public int getId() {
 		return id;
@@ -76,6 +70,13 @@ public class Pet {
 
     public void adicionarDoenca(String doenca) {
         this.doencas.add(doenca);
+    }
+    
+    public void solicitarAtendimento(String doenca) {
+        Consulta consulta = new Consulta(this); // Cria uma nova consulta para este pet
+        consulta.setDoenca(doenca); // vai dizer a doença
+        consulta.solicitarConsulta(); // chama met em consulta
+        System.out.println("Consulta solicitada com sucesso para o pet com ID: " + this.id);
     }
 }
 

@@ -10,7 +10,8 @@ public class Funcionario extends Entidade {
 
 	@Override
 	public void operacoes() {
-		int caso = UI.getRequest(3);
+		int caso = UI.getRequest(new String[] { "Operações de contratados", "Exibir renda da clínica",
+				"Operações de Estoque", "Exibir notificações", "Finalizar operações"}); // Botar Operacoes
 		switch (caso) {
 		case 1: // Metodo Registar Pet
 			System.out.println("Digite o cpf:");
