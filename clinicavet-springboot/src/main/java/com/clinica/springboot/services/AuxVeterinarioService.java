@@ -40,7 +40,7 @@ public class AuxVeterinarioService {
 		} catch (EmptyResultDataAccessException e) {
 			throw new ResourceNotFoundException(id);
 		} catch (DataIntegrityViolationException e) {
-			throw new DatabaseException(e.getMessage()); //Passandp exception da própria camada de serviço
+			throw new DatabaseException(e.getMessage()); //Passando exception da própria camada de serviço
 		}
 	}
 
@@ -57,6 +57,5 @@ public class AuxVeterinarioService {
 	private void updateData(AuxVeterinario entity, AuxVeterinario obj) {
 		entity.setNome(obj.getNome());
 		entity.setSenha(obj.getSenha());
-		
 	}
 }

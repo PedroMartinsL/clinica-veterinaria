@@ -25,27 +25,32 @@ public class Consulta implements Serializable {
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'", timezone = "GMT")
 	private Instant data;
 
-	private String doenca;
-	
 	@ManyToOne
 	@JoinColumn(name = "veterinario_id")
 	private Veterinario veterinario;
-	
-	private Integer consultaStatus;
+
+	@ManyToOne
+	@JoinColumn(name = "auxiliar_id")
+	private AuxVeterinario auxVeterinario;
 
 	@ManyToOne
 	@JoinColumn(name = "pet_id")
 	private Pet pet;
+	
+	private String doenca;
+	private Integer consultaStatus;
 
 	public Consulta() {
 	}
 
-	public Consulta(Long id, Instant data, String doenca, Veterinario veterinario, ConsultaStatus consultaStatus, Pet pet) {
+	public Consulta(Long id, Instant data, String doenca, Veterinario veterinario, AuxVeterinario auxVeterinario,
+			ConsultaStatus consultaStatus, Pet pet) {
 		super();
 		this.id = id;
 		this.data = data;
 		this.doenca = doenca;
 		this.veterinario = veterinario;
+		this.auxVeterinario = auxVeterinario;
 		setConsultaStatus(consultaStatus);
 		this.pet = pet;
 	}
@@ -62,8 +67,8 @@ public class Consulta implements Serializable {
 		return veterinario;
 	}
 
-	public void setId_veterinario(Veterinario Veterinario) {
-		this.veterinario = Veterinario;
+	public void setAuxVeterinario(AuxVeterinario auxVeterinario) {
+		this.auxVeterinario = auxVeterinario;
 	}
 
 	public Pet getPet() {
@@ -88,6 +93,14 @@ public class Consulta implements Serializable {
 
 	public void setData(Instant data) {
 		this.data = data;
+	}
+
+	public AuxVeterinario getAuxVeterinario() {
+		return auxVeterinario;
+	}
+
+	public void setVeterinario(Veterinario veterinario) {
+		this.veterinario = veterinario;
 	}
 
 	public ConsultaStatus getConsultaStatus() {

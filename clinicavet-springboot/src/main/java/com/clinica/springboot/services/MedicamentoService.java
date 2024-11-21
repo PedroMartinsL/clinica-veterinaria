@@ -40,7 +40,7 @@ public class MedicamentoService {
 		} catch (EmptyResultDataAccessException e) {
 			throw new ResourceNotFoundException(id);
 		} catch (DataIntegrityViolationException e) {
-			throw new DatabaseException(e.getMessage()); //Passandp exception da própria camada de serviço
+			throw new DatabaseException(e.getMessage()); //Passando exception da própria camada de serviço
 		}
 	}
 

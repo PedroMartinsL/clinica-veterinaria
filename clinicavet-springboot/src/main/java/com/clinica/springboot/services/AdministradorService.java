@@ -17,7 +17,7 @@ import jakarta.persistence.EntityNotFoundException;
 
 @Service
 public class AdministradorService {
-	
+
 	@Autowired
 	private AdministradorRepository repository;
 
@@ -27,7 +27,8 @@ public class AdministradorService {
 
 	public Administrador findById(String id) {
 		Optional<Administrador> obj = repository.findById(id);
-		return obj.orElseThrow(() -> new ResourceNotFoundException(id)); // retorna o objeto do tipo Administrador que estiver																	// dentro do optional
+		return obj.orElseThrow(() -> new ResourceNotFoundException(id)); // retorna o objeto do tipo Administrador que
+																			// estiver // dentro do optional
 	}
 
 	public Administrador insert(Administrador obj) {
@@ -40,13 +41,14 @@ public class AdministradorService {
 		} catch (EmptyResultDataAccessException e) {
 			throw new ResourceNotFoundException(id);
 		} catch (DataIntegrityViolationException e) {
-			throw new DatabaseException(e.getMessage()); //Passandp exception da própria camada de serviço
+			throw new DatabaseException(e.getMessage()); // Passando exception da própria camada de serviço
 		}
 	}
 
 	public Administrador update(String id, Administrador obj) {
 		try {
-			Administrador entity = repository.getReferenceById(id); //monitorar um obj pelo jpa para depois efetuar uma op no bd
+			Administrador entity = repository.getReferenceById(id); // monitorar um obj pelo jpa para depois efetuar uma
+																	// op no bd
 			updateData(entity, obj);
 			return repository.save(entity);
 		} catch (EntityNotFoundException e) {
@@ -57,6 +59,5 @@ public class AdministradorService {
 	private void updateData(Administrador entity, Administrador obj) {
 		entity.setNome(obj.getNome());
 		entity.setSenha(obj.getSenha());
-		
 	}
 }

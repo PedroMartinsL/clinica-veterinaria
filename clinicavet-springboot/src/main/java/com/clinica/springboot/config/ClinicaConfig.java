@@ -90,17 +90,17 @@ public class ClinicaConfig implements CommandLineRunner {
 
 		petRepository.saveAll(Arrays.asList(pet, pet1, pet2, pet3, pet4, pet5));
 
-		Consulta consulta = new Consulta(null, Instant.parse("2024-11-20T19:15:07Z"), "Febre", vet,
+		Consulta consulta = new Consulta(null, Instant.parse("2024-11-20T19:15:07Z"), "Febre", vet, aux,
 				ConsultaStatus.CONCLUIDA, pet);
-		Consulta consulta1 = new Consulta(null, Instant.parse("2024-12-11T15:45:00Z"), "Vômito", vet2,
+		Consulta consulta1 = new Consulta(null, Instant.parse("2024-12-11T15:45:00Z"), "Vômito", vet2, aux,
 				ConsultaStatus.AGENDADO, pet1);
-		Consulta consulta2 = new Consulta(null, Instant.parse("2024-11-23T10:30:00Z"), "Infecção na pele", vet,
+		Consulta consulta2 = new Consulta(null, Instant.parse("2024-11-23T10:30:00Z"), "Infecção na pele", vet, aux2,
 				ConsultaStatus.DIVIDA, pet2);
-		Consulta consulta3 = new Consulta(null, Instant.parse("2024-11-25T16:00:00Z"), "Diarreia", vet2,
+		Consulta consulta3 = new Consulta(null, Instant.parse("2024-11-25T16:00:00Z"), "Diarreia", vet2, aux,
 				ConsultaStatus.CANCELADA, pet3);
-		Consulta consulta4 = new Consulta(null, Instant.parse("2024-12-01T09:15:00Z"), "Dificuldade para andar", vet,
+		Consulta consulta4 = new Consulta(null, Instant.parse("2024-12-01T09:15:00Z"), "Dificuldade para andar", vet, aux2,
 				ConsultaStatus.ANDAMENTO, pet4);
-		Consulta consulta5 = new Consulta(null, Instant.parse("2024-12-05T11:00:00Z"), "Check-up geral", vet2,
+		Consulta consulta5 = new Consulta(null, Instant.parse("2024-12-05T11:00:00Z"), "Check-up geral", vet2, aux2,
 				ConsultaStatus.CONCLUIDA, pet5);
 		
 		consultaRepository.saveAll(Arrays.asList(consulta, consulta1, consulta2, consulta3, consulta4, consulta5));

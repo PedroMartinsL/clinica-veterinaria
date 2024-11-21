@@ -25,7 +25,7 @@ public class Pet implements Serializable {
 	private String animal;
 	private String cpf_dono;
 	private String raca;
-	private int idade;
+	private Integer idade;
 	
 	@JsonIgnore
 	@OneToMany(mappedBy = "pet")
@@ -34,7 +34,7 @@ public class Pet implements Serializable {
 	public Pet() {
 	}
 
-	public Pet(Long id, String animal, String cpf_dono, String raca, int idade) {
+	public Pet(Long id, String animal, String cpf_dono, String raca, Integer idade) {
 		super();
 		this.id = id;
 		this.animal = animal;
@@ -75,11 +75,11 @@ public class Pet implements Serializable {
 		this.raca = raca;
 	}
 
-	public int getIdade() {
+	public Integer getIdade() {
 		return idade;
 	}
 
-	public void setIdade(int idade) {
+	public void setIdade(Integer idade) {
 		this.idade = idade;
 	}
 

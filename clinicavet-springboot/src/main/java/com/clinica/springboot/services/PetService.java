@@ -17,7 +17,7 @@ import jakarta.persistence.EntityNotFoundException;
 
 @Service
 public class PetService {
-	
+
 	@Autowired
 	private PetRepository repository;
 
@@ -27,7 +27,8 @@ public class PetService {
 
 	public Pet findById(Long id) {
 		Optional<Pet> obj = repository.findById(id);
-		return obj.orElseThrow(() -> new ResourceNotFoundException(id)); // retorna o objeto do tipo Pet que estiver																	// dentro do optional
+		return obj.orElseThrow(() -> new ResourceNotFoundException(id)); // retorna o objeto do tipo Pet que estiver //
+																			// dentro do optional
 	}
 
 	public Pet insert(Pet obj) {
@@ -40,13 +41,13 @@ public class PetService {
 		} catch (EmptyResultDataAccessException e) {
 			throw new ResourceNotFoundException(id);
 		} catch (DataIntegrityViolationException e) {
-			throw new DatabaseException(e.getMessage()); //Passandp exception da própria camada de serviço
+			throw new DatabaseException(e.getMessage()); // Passando exception da própria camada de serviço
 		}
 	}
 
 	public Pet update(Long id, Pet obj) {
 		try {
-			Pet entity = repository.getReferenceById(id); //monitorar um obj pelo jpa para depois efetuar uma op no bd
+			Pet entity = repository.getReferenceById(id); // monitorar um obj pelo jpa para depois efetuar uma op no bd
 			updateData(entity, obj);
 			return repository.save(entity);
 		} catch (EntityNotFoundException e) {
