@@ -2,6 +2,7 @@ package model.entidades;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
@@ -66,15 +67,53 @@ public class Funcionario extends Entidade {
 		System.out.println("Animal registrado com sucesso e consulta agendada!");
 	}
 
-	public void cobrarConsulta() { // id_pet
-		System.out.println("Digite o ID do pet:");
-		String cpf = UI.sc.nextLine();
-		Pet pet = new Pet(cpf, "Nome do Pet", "Raça", 3);
-		Consulta consulta = new Consulta(pet); // Vai associar a consulta ao pet
+	public void cobrarConsulta() {
+	    PreparedStatement st = null;
+	    Connection conn = DB.getConnection();
 
-		// Lógica de cobrança (pode ser expandida conforme necessário)
-		System.out.println("Cobrando consulta para o pet: " + pet.getAnimal());
+	    System.out.println("Digite o ID da Consulta para cobrança:");
+	    int idConsulta = UI.sc.nextInt();
+
+	    try {
+	        String sqlStatus = "SELECT status FROM Consultas WHERE id = ?";
+	        st = conn.prepareStatement(sqlStatus);
+	        st.setInt(1, idConsulta);
+
+	        ResultSet rs = st.executeQuery();
+
+	        if (rs.next()) {
+	            int status = rs.getInt("status");
+
+	            if (status == 3) {
+	                System.out.println("Consulta encontrada! Status: Em Dívida.");
+	                
+	                System.out.println("Deseja pagar a consulta? (1 - Sim, 2 - Não)");
+	                int opcao = UI.sc.nextInt();
+	                
+	                if (opcao == 1) {
+	                    String sqlAtualizarStatus = "UPDATE Consultas SET status = 2 WHERE id = ?";
+	                    st = conn.prepareStatement(sqlAtualizarStatus);
+	                    st.setInt(1, idConsulta);
+	                    st.executeUpdate();
+	                    
+	                    System.out.println("Consulta cobrada com sucesso para o ID da consulta: " + idConsulta);
+	                } else {
+	                    System.out.println("Cobrança não realizada.");
+	                }
+	            } else {
+	                System.out.println("O status da consulta não é 'Em Dívida'. Não é possível cobrar.");
+	            }
+	        } else {
+	            System.out.println("Nenhuma consulta encontrada com o ID: " + idConsulta);
+	        }
+
+	    } catch (SQLException e) {
+	        throw new DbException(e.getMessage());
+	    } finally {
+	        DB.closeStatement(st);
+	    }
 	}
+
 
 	public void solicitarConsulta() {
 
