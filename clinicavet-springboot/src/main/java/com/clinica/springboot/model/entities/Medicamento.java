@@ -1,10 +1,7 @@
 package com.clinica.springboot.model.entities;
 
 import java.io.Serializable;
-import java.time.Instant;
 import java.util.Objects;
-
-import com.fasterxml.jackson.annotation.JsonFormat;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -24,15 +21,14 @@ public class Medicamento implements Serializable {
 	private String laboratorio;
 	private Double concentracao;
 	private Double preco;
-	
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'", timezone = "GMT")
-	private Instant validade;
+
+	private Integer quantidade;
 	private boolean contrato;
 
 	public Medicamento() {
 	}
 
-	public Medicamento(Long id, String nome, String laboratorio, Double concentracao, Double preco, Instant validade,
+	public Medicamento(Long id, String nome, String laboratorio, Double concentracao, Double preco, Integer quantidade,
 			boolean contrato) {
 		super();
 		this.id = id;
@@ -40,7 +36,7 @@ public class Medicamento implements Serializable {
 		this.laboratorio = laboratorio;
 		this.concentracao = concentracao;
 		this.preco = preco;
-		this.validade = validade;
+		this.quantidade = quantidade;
 		this.contrato = contrato;
 	}
 
@@ -84,12 +80,12 @@ public class Medicamento implements Serializable {
 		this.preco = preco;
 	}
 
-	public Instant getValidade() {
-		return validade;
+	public Integer getQuantidade() {
+		return quantidade;
 	}
 
-	public void setValidade(Instant validade) {
-		this.validade = validade;
+	public void setQuantidade(Integer quantidade) {
+		this.quantidade = quantidade;
 	}
 
 	public boolean isContrato() {

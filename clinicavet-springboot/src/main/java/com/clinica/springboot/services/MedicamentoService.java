@@ -59,7 +59,7 @@ public class MedicamentoService {
 		entity.setContrato(obj.isContrato());
 		entity.setPreco(obj.getPreco());
 		entity.setNome(obj.getNome());
-		entity.setValidade(obj.getValidade());
+		entity.setQuantidade(obj.getQuantidade());
 		entity.setLaboratorio(obj.getLaboratorio());
 	}
 	
@@ -86,8 +86,8 @@ public class MedicamentoService {
 	    if (obj.getNome() != null) {
 	        entity.setNome(obj.getNome());
 	    }
-	    if (obj.getValidade() != null) {
-	        entity.setValidade(obj.getValidade());
+	    if (obj.getQuantidade() != null) {
+	        entity.setQuantidade(obj.getQuantidade());
 	    }
 	    if (obj.getLaboratorio() != null) {
 	        entity.setLaboratorio(obj.getLaboratorio());

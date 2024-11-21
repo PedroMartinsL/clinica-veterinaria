@@ -69,15 +69,15 @@ public class ClinicaConfig implements CommandLineRunner {
 		vetRepository.saveAll(Arrays.asList(vet, vet2));
 
 		Medicamento dipirona = new Medicamento(null, "Dipirona", "Cimed", 25.0, 15.50,
-				Instant.parse("2025-06-30T09:30:20Z"), true);
-		Medicamento vonal = new Medicamento(null, "Vonal", "Avert", 5.0, 12.00, Instant.parse("2027-01-02T19:53:00Z"),
+				20, true);
+		Medicamento vonal = new Medicamento(null, "Vonal", "Avert", 5.0, 12.00, 35,
 				true);
-		Medicamento cefalexina = new Medicamento(null, "Cefalexina", "Cimed", 500.0, 40.00,
-				Instant.parse("2024-08-17T20:30:00Z"), true);
-		Medicamento probiotico = new Medicamento(null, "Probiótico", "Biofarma", 25.0, 8.20,
-				Instant.parse("2025-01-15T10:23:00Z"), true);
+		Medicamento cefalexina = new Medicamento(null, "Cefalexina", "ABL", 500.0, 40.00,
+				25, true);
+		Medicamento probiotico = new Medicamento(null, "Probiótico", "Biofarma", 30.0, 8.20,
+				40, true);
 		Medicamento creatina = new Medicamento(null, "Creatina Equina", "VetUP", 25.0, 80.00,
-				Instant.parse("2026-10-21T18:10:00Z"), true);
+				15, true);
 
 		medRepository.saveAll(Arrays.asList(dipirona, vonal, cefalexina, probiotico, creatina));
 
