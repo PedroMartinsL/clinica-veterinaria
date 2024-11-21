@@ -2,10 +2,12 @@ package com.clinica.springboot.model.entities;
 
 import java.io.Serializable;
 import java.time.Instant;
+import java.util.List;
 import java.util.Objects;
 
 import com.clinica.springboot.model.entities.enums.ConsultaStatus;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -13,6 +15,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 
 @Entity
 public class Consulta implements Serializable {
@@ -36,6 +39,10 @@ public class Consulta implements Serializable {
 	@ManyToOne
 	@JoinColumn(name = "pet_id")
 	private Pet pet;
+	
+	@JsonIgnore
+	@OneToMany
+	private List<Pedido> pedidos;
 	
 	private String doenca;
 	private Integer consultaStatus;

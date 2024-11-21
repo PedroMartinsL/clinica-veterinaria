@@ -18,10 +18,10 @@ public class AuxVeterinario implements Serializable {
 
 	@Id
 	private String cpf;
-	
+
 	private String nome;
 	private String senha;
-	
+
 	@JsonIgnore
 	@OneToMany(mappedBy = "auxVeterinario")
 	private List<Consulta> consultas = new ArrayList<>();
@@ -59,6 +59,14 @@ public class AuxVeterinario implements Serializable {
 		this.senha = senha;
 	}
 
+	public List<Consulta> getConsultas() {
+		return consultas;
+	}
+
+	public void setConsultas(List<Consulta> consultas) {
+		this.consultas = consultas;
+	}
+
 	@Override
 	public int hashCode() {
 		return Objects.hash(cpf);
@@ -75,6 +83,5 @@ public class AuxVeterinario implements Serializable {
 		AuxVeterinario other = (AuxVeterinario) obj;
 		return Objects.equals(cpf, other.cpf);
 	}
-	
-	
+
 }

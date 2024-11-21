@@ -13,6 +13,7 @@ import com.clinica.springboot.model.entities.AuxVeterinario;
 import com.clinica.springboot.model.entities.Consulta;
 import com.clinica.springboot.model.entities.Funcionario;
 import com.clinica.springboot.model.entities.Medicamento;
+import com.clinica.springboot.model.entities.Pedido;
 import com.clinica.springboot.model.entities.Pet;
 import com.clinica.springboot.model.entities.Veterinario;
 import com.clinica.springboot.model.entities.enums.ConsultaStatus;
@@ -21,6 +22,7 @@ import com.clinica.springboot.repositories.AuxVeterinarioRepository;
 import com.clinica.springboot.repositories.ConsultaRepository;
 import com.clinica.springboot.repositories.FuncionarioRepository;
 import com.clinica.springboot.repositories.MedicamentoRepository;
+import com.clinica.springboot.repositories.PedidoRepository;
 import com.clinica.springboot.repositories.PetRepository;
 import com.clinica.springboot.repositories.VeterinarioRepository;
 
@@ -47,6 +49,9 @@ public class ClinicaConfig implements CommandLineRunner {
 
 	@Autowired
 	private PetRepository petRepository;
+	
+	@Autowired
+	private PedidoRepository pedidoRepository;
 
 	@Override
 	public void run(String... args) throws Exception {
@@ -104,6 +109,24 @@ public class ClinicaConfig implements CommandLineRunner {
 				ConsultaStatus.CONCLUIDA, pet5);
 		
 		consultaRepository.saveAll(Arrays.asList(consulta, consulta1, consulta2, consulta3, consulta4, consulta5));
+		
+		Pedido pedido1 = new Pedido(null, vet, dipirona, consulta, 3);
+		Pedido pedido2 = new Pedido(null, vet, cefalexina, consulta, 1);
+		Pedido pedido3 = new Pedido(null, vet2, vonal, consulta1, 1);
+		
+		pedidoRepository.saveAll(Arrays.asList(pedido1, pedido2, pedido3));
+		
+		vet.getConsultas().addAll(Arrays.asList(consulta, consulta2, consulta4));
+		vet.getConsultas().addAll(Arrays.asList(consulta1, consulta3, consulta5));
+		
+		vet.getPedidos().addAll(Arrays.asList(pedido1, pedido2));
+		vet.getPedidos().addAll(Arrays.asList(pedido3));
+		
+		aux.getConsultas().addAll(Arrays.asList(consulta, consulta1, consulta3));
+		aux.getConsultas().addAll(Arrays.asList(consulta2, consulta4, consulta5));
+		
+		auxRepository.saveAll(Arrays.asList(aux, aux2));
+		vetRepository.saveAll(Arrays.asList(vet, vet2));
 	}
 
 }

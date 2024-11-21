@@ -18,13 +18,17 @@ public class Veterinario implements Serializable {
 
 	@Id
 	private String cpf;
-	
+
 	private String nome;
 	private String senha;
-	
+
 	@JsonIgnore
 	@OneToMany(mappedBy = "veterinario")
 	private List<Consulta> consultas = new ArrayList<>();
+
+	@JsonIgnore
+	@OneToMany(mappedBy = "veterinario")
+	private List<Pedido> pedidos = new ArrayList<>();
 
 	public Veterinario() {
 	}
@@ -59,6 +63,22 @@ public class Veterinario implements Serializable {
 		this.senha = senha;
 	}
 
+	public List<Consulta> getConsultas() {
+		return consultas;
+	}
+
+	public void setConsultas(List<Consulta> consultas) {
+		this.consultas = consultas;
+	}
+
+	public List<Pedido> getPedidos() {
+		return pedidos;
+	}
+
+	public void setPedidos(List<Pedido> pedidos) {
+		this.pedidos = pedidos;
+	}
+
 	@Override
 	public int hashCode() {
 		return Objects.hash(cpf);
@@ -75,6 +95,5 @@ public class Veterinario implements Serializable {
 		Veterinario other = (Veterinario) obj;
 		return Objects.equals(cpf, other.cpf);
 	}
-	
-	
+
 }
