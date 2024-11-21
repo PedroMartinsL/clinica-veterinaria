@@ -121,9 +121,4 @@ public class Pet {
             DB.closeStatement(st);
         }
     }
-	
-	
-	
-	
-	
 }
