@@ -1,7 +1,5 @@
 package model.entidades;
 
-import java.util.ArrayList;
-
 public class Pet {
 	private int id;
 	private String animal;

@@ -37,24 +37,14 @@ public class Funcionario extends Entidade {
                 throw new IllegalArgumentException("Número fora do intervalo");
         }
     }
-/*
-    @Override
-    public void addUser() {
-        // Implementar adição de usuários (se necessário)
-    }
 
-    @Override
-    public void removerUser() {
-        // Implementar remoção de usuários (se necessário)
-    }
-*/
     public void cobrarConsulta() {
         System.out.println("Digite o CPF do proprietário do pet:");
         String cpf = UI.sc.nextLine();
 
         //  exemplo
         Pet pet = new Pet(cpf, "Nome do Pet", "Raça", 3); 
-        Consulta consulta = new Consulta(pet);     /// Vai te a divida, paasar o id do pet
+        Consulta consulta = new Consulta(pet);     /// Vai te a divida, passar o id do pet
     }
 
     public void solicitarConsulta() {
