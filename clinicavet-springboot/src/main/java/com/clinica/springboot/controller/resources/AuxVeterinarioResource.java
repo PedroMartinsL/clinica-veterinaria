@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -56,5 +57,11 @@ public class AuxVeterinarioResource {
 	public ResponseEntity<AuxVeterinario> update(@PathVariable String id, @RequestBody AuxVeterinario obj) {
 		obj = service.update(id, obj);
 		return ResponseEntity.ok().body(obj);
+	}
+	
+	@PatchMapping("/{id}")
+	public ResponseEntity<AuxVeterinario> partialUpdate(@PathVariable String id, @RequestBody AuxVeterinario obj) {
+	    AuxVeterinario updatedPet = service.updatePatch(id, obj);
+	    return ResponseEntity.ok().body(updatedPet);
 	}
 }

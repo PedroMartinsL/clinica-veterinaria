@@ -61,4 +61,30 @@ public class PetService {
 		entity.setIdade(obj.getIdade());
 		entity.setRaca(obj.getRaca());
 	}
+	
+	public Pet updatePatch(Long id, Pet obj) {
+	    try {
+	        Pet entity = repository.getReferenceById(id);
+	        partialUpdateData(entity, obj); 
+	        return repository.save(entity); 
+	    } catch (EntityNotFoundException e) {
+	        throw new ResourceNotFoundException(id); 
+	    }
+	}
+
+	private void partialUpdateData(Pet entity, Pet obj) {
+	    if (obj.getAnimal() != null) {
+	        entity.setAnimal(obj.getAnimal());
+	    }
+	    if (obj.getCpf_dono() != null) {
+	        entity.setCpf_dono(obj.getCpf_dono());
+	    }
+	    if (obj.getIdade() != null) {
+	        entity.setIdade(obj.getIdade());
+	    }
+	    if (obj.getRaca() != null) {
+	        entity.setRaca(obj.getRaca());
+	    }
+	}
+
 }

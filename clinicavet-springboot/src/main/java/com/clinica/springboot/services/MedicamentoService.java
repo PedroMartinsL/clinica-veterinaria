@@ -62,4 +62,36 @@ public class MedicamentoService {
 		entity.setValidade(obj.getValidade());
 		entity.setLaboratorio(obj.getLaboratorio());
 	}
+	
+	public Medicamento updatePatch(Long id, Medicamento obj) {
+	    try {
+	        Medicamento entity = repository.getReferenceById(id);
+	        partialUpdateData(entity, obj); 
+	        return repository.save(entity); 
+	    } catch (EntityNotFoundException e) {
+	        throw new ResourceNotFoundException(id); 
+	    }
+	}
+
+	private void partialUpdateData(Medicamento entity, Medicamento obj) {
+	    if (obj.getConcentracao() != null) {
+	        entity.setConcentracao(obj.getConcentracao());
+	    }
+	    if (obj.isContrato() != entity.isContrato()) {
+	        entity.setContrato(obj.isContrato());
+	    }
+	    if (obj.getPreco() != null) {
+	        entity.setPreco(obj.getPreco());
+	    }
+	    if (obj.getNome() != null) {
+	        entity.setNome(obj.getNome());
+	    }
+	    if (obj.getValidade() != null) {
+	        entity.setValidade(obj.getValidade());
+	    }
+	    if (obj.getLaboratorio() != null) {
+	        entity.setLaboratorio(obj.getLaboratorio());
+	    }
+	}
+
 }

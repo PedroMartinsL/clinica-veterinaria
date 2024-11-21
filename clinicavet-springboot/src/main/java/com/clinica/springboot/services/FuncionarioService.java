@@ -58,4 +58,23 @@ public class FuncionarioService {
 		entity.setNome(obj.getNome());
 		entity.setSenha(obj.getSenha());
 	}
+	
+	public Funcionario updatePatch(String id, Funcionario obj) {
+	    try {
+	    	Funcionario entity = repository.getReferenceById(id);
+	        partialUpdateData(entity, obj); 
+	        return repository.save(entity); 
+	    } catch (EntityNotFoundException e) {
+	        throw new ResourceNotFoundException(id); 
+	    }
+	}
+
+	private void partialUpdateData(Funcionario entity, Funcionario obj) {
+		if (obj.getNome() != null) {
+			entity.setNome(obj.getNome());
+		}
+		if (obj.getSenha() != null) {
+			entity.setSenha(obj.getSenha());
+		}
+	}
 }

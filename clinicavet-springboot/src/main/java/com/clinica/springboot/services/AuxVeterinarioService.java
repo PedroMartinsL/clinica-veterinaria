@@ -58,4 +58,23 @@ public class AuxVeterinarioService {
 		entity.setNome(obj.getNome());
 		entity.setSenha(obj.getSenha());
 	}
+	
+	public AuxVeterinario updatePatch(String id, AuxVeterinario obj) {
+	    try {
+	    	AuxVeterinario entity = repository.getReferenceById(id);
+	        partialUpdateData(entity, obj); 
+	        return repository.save(entity); 
+	    } catch (EntityNotFoundException e) {
+	        throw new ResourceNotFoundException(id); 
+	    }
+	}
+
+	private void partialUpdateData(AuxVeterinario entity, AuxVeterinario obj) {
+		if (obj.getNome() != null) {
+			entity.setNome(obj.getNome());
+		}
+		if (obj.getSenha() != null) {
+			entity.setSenha(obj.getSenha());
+		}
+	}
 }
