@@ -6,7 +6,7 @@ public enum ConsultaStatus {
     ANDAMENTO(2),
     DIVIDA(3),   
     CANCELADA(4),
-    CONCLUIDA(5);
+    CONCLUIDA(5); //pago
 
     private int code; //enum 
 

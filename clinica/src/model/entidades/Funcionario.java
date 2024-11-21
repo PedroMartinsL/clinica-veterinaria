@@ -4,7 +4,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 
 import db.DB;
 import db.DbException;
@@ -67,7 +66,7 @@ public class Funcionario extends Entidade {
 		System.out.println("Animal registrado com sucesso e consulta agendada!");
 	}
 
-	public void cobrarConsulta() {
+	public void cobrarConsulta() { // id de consulta
 	    PreparedStatement st = null;
 	    Connection conn = DB.getConnection();
 
@@ -82,7 +81,7 @@ public class Funcionario extends Entidade {
 	        ResultSet rs = st.executeQuery();
 
 	        if (rs.next()) {
-	            int status = rs.getInt("status");
+	            int status = rs.getInt("status"); // tem que ser igual ao bd
 
 	            if (status == 3) {
 	                System.out.println("Consulta encontrada! Status: Em Dívida.");
@@ -91,7 +90,7 @@ public class Funcionario extends Entidade {
 	                int opcao = UI.sc.nextInt();
 	                
 	                if (opcao == 1) {
-	                    String sqlAtualizarStatus = "UPDATE Consultas SET status = 2 WHERE id = ?";
+	                    String sqlAtualizarStatus = "UPDATE Consultas SET status = 5 WHERE id = ?";
 	                    st = conn.prepareStatement(sqlAtualizarStatus);
 	                    st.setInt(1, idConsulta);
 	                    st.executeUpdate();
@@ -137,22 +136,92 @@ public class Funcionario extends Entidade {
 	}
 
 	public void buscarHistorico() {
-		System.out.println("Digite o CPF do proprietário do pet para buscar o histórico:");
-		String cpf = UI.sc.nextLine();
+	    PreparedStatement st = null;
+	    Connection conn = DB.getConnection();
 
-		Pet pet = new Pet(cpf, "Nome do Pet", "Raça", 3);
+	    System.out.println("Digite o ID do Pet para buscar o histórico de consultas:");
+	    int idPet = UI.sc.nextInt();
+	    
+	    try {
+	        //  pegar histórico de consultas do pet
+	        String sql = "SELECT id, data, doenca, status FROM Consultas WHERE pet_id = ?";
+	        st = conn.prepareStatement(sql);
+	        st.setInt(1, idPet);
 
-		System.out.println("Buscando histórico de doenças e quadro financeiro do pet de CPF: " + cpf);
+	        ResultSet rs = st.executeQuery();
 
-		ArrayList<Consulta> historico = pet.getConsultas();
-		if (historico.isEmpty()) {
-			System.out.println("Não há histórico de consultas.");
-		} else {
-			for (Consulta c : historico) {
-				System.out.println("Consulta de " + c.getDoenca() + " em " + c.getData());
-			}
-		}
+	        if (rs.next()) {
+	            System.out.println("Histórico de Consultas do Pet ID: " + idPet);
+	            do {
+	                System.out.println("ID Consulta: " + rs.getInt("id") + " | Data: " + rs.getDate("data") +
+	                        " | Doença: " + rs.getString("doenca") + " | Status: " + rs.getInt("status"));
+	            } while (rs.next());
+	        } else {
+	            System.out.println("Nenhuma consulta encontrada para o pet com ID: " + idPet);
+	        }
+	    } catch (SQLException e) {
+	        throw new DbException(e.getMessage());
+	    } finally {
+	        DB.closeStatement(st);
+	    }
 	}
+
+	
+	public void buscarHistoricoDoencas() {
+	    PreparedStatement st = null;
+	    Connection conn = DB.getConnection();
+
+	    try {
+	        // pegar todas as doenças registradas nas consultas
+	        String sql = "SELECT DISTINCT doenca FROM Consultas";
+	        st = conn.prepareStatement(sql);
+
+	        ResultSet rs = st.executeQuery();
+
+	        if (rs.next()) {
+	            System.out.println("Histórico de Doenças:");
+	            do {
+	                System.out.println("Doença: " + rs.getString("doenca"));
+	            } while (rs.next());
+	        } else {
+	            System.out.println("Nenhuma doença registrada no histórico.");
+	        }
+	    } catch (SQLException e) {
+	        throw new DbException(e.getMessage());
+	    } finally {
+	        DB.closeStatement(st);
+	    }
+	}
+
+	
+	public void buscarHistoricoDividas() {
+	    PreparedStatement st = null;
+	    Connection conn = DB.getConnection();
+
+	    try {
+	        //  pegar as consultas com status "Em Dívida"
+	        String sql = "SELECT id, pet_id, data, doenca FROM Consultas WHERE status = 3";
+	        st = conn.prepareStatement(sql);
+
+	        ResultSet rs = st.executeQuery();
+
+	        if (rs.next()) {
+	            System.out.println("Histórico de Dívidas (Consultas em Dívida):");
+	            do {
+	                System.out.println("ID Consulta: " + rs.getInt("id") + " | Pet ID: " + rs.getInt("pet_id") +
+	                        " | Data: " + rs.getDate("data") + " | Doença: " + rs.getString("doenca"));
+	            } while (rs.next());
+	        } else {
+	            System.out.println("Não há consultas em dívida no sistema.");
+	        }
+	    } catch (SQLException e) {
+	        throw new DbException(e.getMessage());
+	    } finally {
+	        DB.closeStatement(st);
+	    }
+	}
+
+	
 
 	public static void cancelarConsulta() {
 
