@@ -1,58 +1,41 @@
 package model.entidades;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class Pet {
-    private String cpfDono;
-    private String animal;
-    private String raca;
-    private Integer idade;
-    private List<String> doencas; // Lista para armazenar doenças do pet
-    private int id;
+	private int id;
+	private String animal;
+	private String cpfDono;
+	private String raca;
+	private int idade;
 
-    public Pet(String cpfDono, String animal, String raca, Integer idade) {
-        this.cpfDono = cpfDono;
-        this.animal = animal;
-        this.raca = raca;
-        this.idade = idade;
-        this.doencas = new ArrayList<>(); // Inicializa a lista de doenças
-    }
+	public Pet() {
 
-    // Getters e Setters
-    public String getCpfDono() {
-        return cpfDono;
-    }
+	}
 
-    public void setCpfDono(String cpfDono) {
-        this.cpfDono = cpfDono;
-    }
+	public Pet(int id) {
+		super();
+		this.id = id;
+	}
 
-    public String getAnimal() {
-        return animal;
-    }
+	public Pet(String animal, String cpfDono, String raca, int idade) {
+		this.animal = animal;
+		this.cpfDono = cpfDono;
+		this.raca = raca;
+		this.idade = idade;
+	}
 
-    public void setAnimal(String animal) {
-        this.animal = animal;
-    }
+	public Pet(int id, String animal, String cpfDono, String raca, int idade) {
+		super();
+		this.id = id;
+		this.animal = animal;
+		this.cpfDono = cpfDono;
+		this.raca = raca;
+		this.idade = idade;
+	}
 
-    public String getRaca() {
-        return raca;
-    }
-
-    public void setRaca(String raca) {
-        this.raca = raca;
-    }
-
-    public Integer getIdade() {
-        return idade;
-    }
-
-    public void setIdade(Integer idade) {
-        this.idade = idade;
-    }   
-       
-    public int getId() {
+	// Getters e Setters
+	public int getId() {
 		return id;
 	}
 
@@ -60,23 +43,43 @@ public class Pet {
 		this.id = id;
 	}
 
-	public void financiaCliente(String cpf) {
-        System.out.println("Financiando cliente com CPF: " + cpf);
-    }
+	public String getAnimal() {
+		return animal;
+	}
 
-    public void listarDoencasPet() {
-        System.out.println("Doenças do pet: " + doencas);
-    }
+	public void setAnimal(String animal) {
+		this.animal = animal;
+	}
 
-    public void adicionarDoenca(String doenca) {
-        this.doencas.add(doenca);
-    }
-    
-    public void solicitarAtendimento(String doenca) {
-        Consulta consulta = new Consulta(this); // Cria uma nova consulta para este pet
-        consulta.setDoenca(doenca); // vai dizer a doença
-        consulta.solicitarConsulta(); // chama met em consulta
-        System.out.println("Consulta solicitada com sucesso para o pet com ID: " + this.id);
-    }
+	public String getCpfDono() {
+		return cpfDono;
+	}
+
+	public void setCpfDono(String cpfDono) {
+		this.cpfDono = cpfDono;
+	}
+
+	public String getRaca() {
+		return raca;
+	}
+
+	public void setRaca(String raca) {
+		this.raca = raca;
+	}
+
+	public int getIdade() {
+		return idade;
+	}
+
+	public void setIdade(int idade) {
+		this.idade = idade;
+	}
+
+	// Método para exibir informações do pet
+	public void exibirInformacoes() {
+		System.out.println("Pet: " + animal);
+		System.out.println("CPF do dono: " + cpfDono);
+		System.out.println("Raça: " + raca);
+		System.out.println("Idade: " + idade);
+	}
 }
-
