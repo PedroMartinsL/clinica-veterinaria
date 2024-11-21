@@ -1,14 +1,11 @@
 package controler.gerenciamento;
 
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -32,7 +29,7 @@ public class Estoque {
 
 	public static void gerenciar() {
 		int request = UI.getRequest(new String[] { "Assinar reposição de medicamento", "Cancelar reposição",
-				"Listagem estoque","Adicionar linha de Medicamento", "Voltar" });
+				"Listagem estoque", "Adicionar linha de Medicamento", "Voltar" });
 		switch (request) {
 		case 1:
 			System.out.print("Digite o id do medicamento que deseja cancelar o contrato: ");
@@ -67,8 +64,6 @@ public class Estoque {
 	}
 
 	public static Map<Medicamento, Integer> solicitarMedicamento(Pedido pedido) {
-		// consulta pelo banco MYSQL
-		checarValidade();
 
 		List<Map.Entry<Medicamento, Integer>> listaMapeada = new ArrayList<>(pedido.getPedidos().entrySet());
 
@@ -76,21 +71,20 @@ public class Estoque {
 
 		for (int i = 0; i < listaMapeada.size(); i++) {
 			Medicamento remedioAdd = addCarrinho(listaMapeada.get(i).getKey(), pedido.getResponsavel(),
-					listaMapeada.get(i).getValue());
+					listaMapeada.get(i).getValue(), pedido.getIdConsulta());
 			if (remedioAdd != null) {
 				carrinho.put(remedioAdd, listaMapeada.get(i).getValue());
 			}
 		}
 		return carrinho;
 	}
-
-	public static Medicamento addCarrinho(Medicamento medicamento, Entidade responsavel, int quantidade) {
+	
+	public static Medicamento addCarrinho(Medicamento medicamento, Entidade responsavel, int quantidade, int idConsulta) {
 		// teoricamente a validade já foi checada
 
 		PreparedStatement st = null;
 		ResultSet rs = null;
 		try {
-
 			st = conn.prepareStatement(
 					"SELECT Medicamentos.* from Medicamentos where Medicamentos.nome = ? and Medicamentos.laboratorio = ?  and Medicamentos.concentracao = ?");
 
@@ -99,16 +93,19 @@ public class Estoque {
 			st.setDouble(3, medicamento.getConcentracao());
 
 			rs = st.executeQuery();
-			int reservaEstoque = rs.getInt("quantidade");
-
-			if (quantidade <= reservaEstoque) {
-				retirarMedicamento(medicamento, quantidade, responsavel);
-				checarEstoque(medicamento);
-				return instanciateMedicamento(rs);
-			} else {
-				System.out.println("A quantidade encontrada do medicamento está abaixo do esperado!");
-				System.out.printf("Medicamento: %s - Quantidade Solicitada: %d - Disponível: %d\n\n",
-						medicamento.getNome(), quantidade, reservaEstoque);
+			if (rs.next()) {
+				int reservaEstoque = rs.getInt("quantidade");
+				
+				if (quantidade <= reservaEstoque) {
+					retirarMedicamento(rs.getInt("id_medicamento"), quantidade, responsavel, idConsulta); // alterar lógica aqui
+					checarEstoque(medicamento);
+									
+					return instanciateMedicamento(rs);
+				} else {
+					System.out.println("A quantidade encontrada do medicamento está abaixo do esperado!");
+					System.out.printf("Medicamento: %s - Quantidade Solicitada: %d - Disponível: %d\n\n",
+							medicamento.getNome(), quantidade, reservaEstoque);
+				}
 			}
 		} catch (SQLException e) {
 			throw new DbException(e.getMessage());
@@ -118,30 +115,30 @@ public class Estoque {
 		}
 		return null;
 	}
+	
 
 	private static Medicamento instanciateMedicamento(ResultSet rs) throws SQLException {
-		return new Medicamento(rs.getInt("id"), rs.getDouble("preco"), rs.getString("laboratorio"), rs.getDouble("concentracao"),
-				rs.getString("nome"), LocalDate.parse((CharSequence) rs.getDate("validade")));
+		return new Medicamento(rs.getInt("id"), rs.getDouble("preco"), rs.getString("laboratorio"),
+				rs.getDouble("concentracao"), rs.getString("nome"));
 	}
 
-	public static void retirarMedicamento(Medicamento medicamento, int quantidade, Entidade responsavel) throws SQLException {
+	public static void retirarMedicamento(int idMedicamento, int quantidade,
+			Entidade responsavel, int idConsulta) throws SQLException {
 		PreparedStatement st = null;
 
-		st = conn.prepareStatement("UPDATE Medicamentos "
-				+ "SET Quantity = (Select Medicamentos where Medicamentos.nome = ? and Medicamentos.laboratorio = ?  and Medicamentos.concentracao = ?) - ?");
+		st = conn.prepareStatement(
+				"UPDATE Medicamentos SET quantitidade = quantitidade - ? WHERE id = ?");
 
-		st.setString(1, medicamento.getNome());
-		st.setString(2, medicamento.getLaboratorio());
-		st.setDouble(3, medicamento.getConcentracao());
-		st.setDouble(4, quantidade);
-
+		st.setDouble(1, quantidade);
+		st.setInt(2, idMedicamento);
+		
 		st.executeUpdate();
 		
-		st = conn.prepareStatement("INSERT INTO Retirada (data_retirada, id_medicamento, quantidade, responsavel) "
-				+ "values (?,?,?,?)");
+		st = conn.prepareStatement(
+				"INSERT INTO Pedidos (id_consulta, medicamento_id, quantidade, responsavel) " + "values (?,?,?,?)");
 
-		st.setDate(1, java.sql.Date.valueOf(LocalDate.now()));
-		st.setInt(2, medicamento.getId());
+		st.setInt(1, idConsulta);
+		st.setInt(2, idMedicamento);
 		st.setInt(3, quantidade);
 		st.setString(4, responsavel.getCpf());
 
@@ -164,12 +161,11 @@ public class Estoque {
 	}
 
 	private static void checarEstoque(Medicamento medicamento) throws SQLException {
-
 		PreparedStatement st = null;
 		ResultSet rs = null;
 		try {
 			st = conn.prepareStatement(
-					"SELECT quantidade from Medicamentos where Medicamentos.nome = ? and Medicamentos.laboratorio = ?  and Medicamentos.concentracao = ?");
+					"SELECT quantidade from Medicamentos where nome = ? and laboratorio = ?  and concentracao = ?");
 
 			st.setString(1, medicamento.getNome());
 			st.setString(2, medicamento.getLaboratorio());
@@ -196,8 +192,8 @@ public class Estoque {
 		// considerando 10% da carga total
 		PreparedStatement st = null;
 		try {
-			st = conn.prepareStatement("UPDATE Medicamentos "
-					+ "SET Quantity = (Select Medicamentos where Medicamentos.nome = ? and Medicamentos.laboratorio = ?  and Medicamentos.concentracao = ?) * 10");
+			st = conn.prepareStatement("UPDATE Medicamentos where nome = ? and laboratorio = ?  and concentracao = ?"
+					+ "SET quantidade = quantidade * 10");
 
 			st.setString(1, medicamento.getNome());
 			st.setString(2, medicamento.getLaboratorio());
@@ -210,29 +206,11 @@ public class Estoque {
 		} finally {
 			DB.closeStatement(st);
 		}
-		//depois adicionar a tabela de despesa
-	}
-
-	private static void checarValidade() {
-		// método que executa antes da retirada do medicamento
-		LocalDate ld = LocalDate.now();
-
-		PreparedStatement st = null;
-		try {
-
-			st = conn.prepareStatement("DELETE FROM TABELA WHERE (Select Medicamentos.validade from medicamentos) < ?");
-
-			st.setDate(1, java.sql.Date.valueOf(ld));
-			st.executeUpdate();
-
-		} catch (SQLException e) {
-			throw new DbException(e.getMessage());
-		} finally {
-			DB.closeStatement(st);
-		}
+		// depois adicionar a tabela de despesa
 	}
 
 	public static void notificarAdm(String msg) {
+		//modificar e adicionar em um bloco de notas para os adms
 		// aqui recebemos a lista dos adms pelo BD
 		for (Administrador adm : admObservers) {
 			adm.update(msg);
@@ -256,102 +234,105 @@ public class Estoque {
 	}
 
 	public static void listarEstoque() {
-	    PreparedStatement st = null;
-	    ResultSet rs = null;
-
-	    try {
-	        st = conn.prepareStatement("SELECT nome, preco, laborator, validade, concentra, contrato FROM Medicamentos");
-	        rs = st.executeQuery();
-
-	        System.out.println("Medicamentos disponíveis:");
-	        System.out.printf("%-20s %-10s %-15s %-15s %-10s %-10s%n", 
-	                          "Nome", "Preço", "Laboratório", "Validade", "Concentração", "Contrato");
-	        System.out.println("-----------------------------------------------------------------------------------");
-
-	        while (rs.next()) {
-	            String nome = rs.getString("nome");
-	            double preco = rs.getDouble("preco");
-	            String laboratorio = rs.getString("laborator");
-	            Date validade = rs.getDate("validade");
-	            double concentracao = rs.getDouble("concentra");
-	            boolean contrato = rs.getBoolean("contrato");
-
-	            System.out.printf("%-20s %-10.2f %-15s %-15s %-10.2f %-10s%n", 
-	                              nome, preco, laboratorio, validade, concentracao, contrato ? "Sim" : "Não");
-	        }
-
-	    } catch (SQLException e) {
-	        throw new DbException(e.getMessage());
-	    } finally {
-	        DB.closeStatement(st);
-	        DB.closeResultSet(rs);
-	    }
-	}
-	
-	public static void listarEstoque(String nomeMedicacao) {
-	    PreparedStatement st = null;
-	    ResultSet rs = null;
-
-	    try {
-	        st = conn.prepareStatement("SELECT nome, preco, laborator, validade, concentra, contrato FROM Medicamentos where nome = ?");
-	        
-	        st.setString(1, nomeMedicacao);
-	        
-	        rs = st.executeQuery();
-
-	        System.out.println("Medicamentos disponíveis:");
-	        System.out.printf("%-20s %-10s %-15s %-15s %-10s %-10s%n", 
-	                          "Nome", "Preço", "Laboratório", "Validade", "Concentração", "Contrato");
-	        System.out.println("-----------------------------------------------------------------------------------");
-
-	        while (rs.next()) {
-	            String nome = rs.getString("nome");
-	            double preco = rs.getDouble("preco");
-	            String laboratorio = rs.getString("laborator");
-	            Date validade = rs.getDate("validade");
-	            double concentracao = rs.getDouble("concentra");
-	            boolean contrato = rs.getBoolean("contrato");
-
-	            System.out.printf("%-20s %-10.2f %-15s %-15s %-10.2f %-10s%n", 
-	                              nome, preco, laboratorio, validade, concentracao, contrato ? "Sim" : "Não");
-	        }
-
-	    } catch (SQLException e) {
-	        throw new DbException(e.getMessage());
-	    } finally {
-	        DB.closeStatement(st);
-	        DB.closeResultSet(rs);
-	    }
-	} 
-	
-	private static void adicionarMedicamento() {
 		PreparedStatement st = null;
-		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+		ResultSet rs = null;
+
+		try {
+			st = conn
+					.prepareStatement("SELECT nome, preco, laboratorio, concentracao, quantidade, contrato FROM Medicamentos");
+			rs = st.executeQuery();
+
+			System.out.println("Medicamentos disponíveis:");
+			System.out.printf("%-20s %-10s %-15s %-15s %-10s %-10s%n", "Nome", "Preço", "Laboratório", "Quantidade",
+					"Concentração", "Contrato");
+			System.out.println("-----------------------------------------------------------------------------------");
+
+			while (rs.next()) {
+				String nome = rs.getString("nome");
+				double preco = rs.getDouble("preco");
+				String laboratorio = rs.getString("laboratorio");
+				int quantidade = rs.getInt("quantidade");
+				double concentracao = rs.getDouble("concentracao");
+				boolean contrato = rs.getBoolean("contrato");
+
+				System.out.printf("%-20s %-10.2f %-15s %-15s %-10.2f %-10s%n", nome, preco, laboratorio, quantidade,
+						concentracao, contrato ? "Sim" : "Não");
+			}
+
+		} catch (SQLException e) {
+			throw new DbException(e.getMessage());
+		} finally {
+			DB.closeStatement(st);
+			DB.closeResultSet(rs);
+		}
+	}
+
+	public static void listarEstoque(String nomeMedicacao) {
+		PreparedStatement st = null;
+		ResultSet rs = null;
+
+		try {
+			st = conn.prepareStatement(
+					"SELECT nome, preco, laboratorio, concentracao, quantidade, contrato FROM Medicamentos where nome = ?");
+
+			st.setString(1, nomeMedicacao);
+
+			rs = st.executeQuery();
+
+			System.out.println("Medicamentos disponíveis:");
+			System.out.printf("%-20s %-10s %-15s %-15s %-10s %-10s%n", "Nome", "Preço", "Laboratório", "Quantidade",
+					"Concentração", "Contrato");
+			System.out.println("-----------------------------------------------------------------------------------");
+
+			while (rs.next()) {
+				String nome = rs.getString("nome");
+				double preco = rs.getDouble("preco");
+				String laboratorio = rs.getString("laborator");
+				double concentracao = rs.getDouble("concentracao");
+				int quantidade = rs.getInt("quantidade");
+				boolean contrato = rs.getBoolean("contrato");
+
+				System.out.printf("%-20s %-10.2f %-15s %-15s %-10.2f %-10s%n", nome, preco, laboratorio,
+						quantidade, concentracao, contrato ? "Sim" : "Não");
+			}
+
+		} catch (SQLException e) {
+			throw new DbException(e.getMessage());
+		} finally {
+			DB.closeStatement(st);
+			DB.closeResultSet(rs);
+		}
+	}
+
+	private static void adicionarMedicamento() {
+		//corrigir futuramente se for um mesmo medicamento adicionado
+		PreparedStatement st = null;
 		try {
 			System.out.println("Digite o nome do medicamento: ");
 			String nome = UI.sc.nextLine();
 			System.out.println("Digite o laboratório: ");
 			String laboratorio = UI.sc.nextLine();
-			System.out.println("Digite a validade no formato dia/mês/ano (numerado): ");
-			LocalDate validade = LocalDate.parse(UI.sc.nextLine(), dtf);
 			System.out.println("Digite o preço: ");
 			double preco = UI.sc.nextDouble();
+			System.out.println("Digite a quantidade: ");
+			int quantidade = UI.sc.nextInt();
 			System.out.println("Digite a concentração: ");
 			double concentracao = UI.sc.nextDouble();
 			UI.sc.nextLine();
-			
-			Medicamento medicamento = new Medicamento(preco, laboratorio, concentracao, nome, validade);
-	
-			st = conn.prepareStatement("INSERT INTO Medicamentos " + "(preco, laboratorio, concentracao, nome, validade, contrato) " + "VALUES " + "(?, ?, ?, ?, ?, ?)",
+
+			Medicamento medicamento = new Medicamento(preco, laboratorio, concentracao, nome);
+
+			st = conn.prepareStatement(
+					"INSERT INTO Medicamentos " + "(preco, laboratorio, concentracao, nome, quantidade, contrato) "
+							+ "VALUES " + "(?, ?, ?, ?, ?, ?)",
 					Statement.RETURN_GENERATED_KEYS);
 
 			st.setDouble(1, medicamento.getPreco());
 			st.setString(2, medicamento.getLaboratorio());
 			st.setDouble(3, medicamento.getConcentracao());
 			st.setString(4, medicamento.getNome());
-			st.setDate(5, java.sql.Date.valueOf(medicamento.getValidade()));
+			st.setInt(5, quantidade);
 			st.setBoolean(6, true);
-			
 
 			int rowsAffected = st.executeUpdate();
 
