@@ -64,7 +64,7 @@ public class SistemaRendimento {
 			LocalDate thirtyDaysAgo = LocalDate.now().minusDays(30);
 			java.sql.Date sqlDate = java.sql.Date.valueOf(thirtyDaysAgo);
 
-			st = conn.prepareStatement("SELECT SUM(valor_total) as despesa_medicamento from Despesas where data > ?");
+			st = conn.prepareStatement("SELECT SUM(valor_total) as despesa_medicamento from Reabastecimentos where data > ?");
 			st.setDate(1, sqlDate);
 			double gastosFixos = 3000;
 			rs = st.executeQuery();
@@ -87,7 +87,7 @@ public class SistemaRendimento {
 			LocalDate thirtyDaysAgo = LocalDate.now().minusDays(30);
 			java.sql.Date sqlDate = java.sql.Date.valueOf(thirtyDaysAgo);
 
-			st = conn.prepareStatement("SELECT SUM(valor_consulta) as total_dividas from Consultas where data > ?");
+			st = conn.prepareStatement("SELECT SUM(valor) as total_dividas from Consultas where data > ?");
 			st.setDate(1, sqlDate);
 			rs = st.executeQuery();
 			return rs.getDouble("total_dividas");
@@ -103,31 +103,31 @@ public class SistemaRendimento {
 		ResultSet rs = null;
 		try {
 			if (medicamento == null && ld == null) {
-				st = conn.prepareStatement("SELECT * from Despesas");
+				st = conn.prepareStatement("SELECT * from Reabastecimentos");
 			} else if (ld != null && medicamento == null) {
-				st = conn.prepareStatement("SELECT * from Despesas where data > ?");
+				st = conn.prepareStatement("SELECT * from Reabastecimentos where data_compra > ?");
 				st.setDate(1, java.sql.Date.valueOf(ld));
 			} else if (ld == null && medicamento != null) {
-				st = conn.prepareStatement("SELECT * from Despesas where id_medicamento = ?");
+				st = conn.prepareStatement("SELECT * from Reabastecimentos where medicamento_id = ?");
 				st.setInt(1, medicamento.getId());
 			} else {
-				st = conn.prepareStatement("SELECT * from Despesas where id_medicamento = ? and data > ?");
+				st = conn.prepareStatement("SELECT * from Reabastecimentos where medicamento_id = ? and data_compra > ?");
 				st.setInt(1, medicamento.getId());
 				st.setDate(2, java.sql.Date.valueOf(ld));
 			}
 
 			rs = st.executeQuery();
 
-			System.out.printf("%-10s %-15s %-10s %-15s%n", "ID", "ID_MEDICAMENTO", "VALOR", "DATA");
+			System.out.printf("%-10s %-15s %-10s %-15s %-15s%n", "ID", "MEDICAMENTO_ID", "VALOR", "DATA", "QUANTIDADE");
 			System.out.println("--------------------------------------------------------------");
 
 			while (rs.next()) {
 				int id = rs.getInt("id");
-				int idMedicamento = rs.getInt("id_medicamento");
+				int idMedicamento = rs.getInt("medicamento_id");
 				double valor = rs.getDouble("valor");
-				java.sql.Date data = rs.getDate("data");
-
-				System.out.printf("%-10d %-15d %-10.2f %-15s%n", id, idMedicamento, valor, data.toString());
+				java.sql.Date data = rs.getDate("data_compra");
+				int quantidade = rs.getInt("quantidade");
+				System.out.printf("%-10d %-15d %-10.2f %-15s %-15s%n", id, idMedicamento, valor, data.toString(), quantidade);
 			}
 
 		} finally {

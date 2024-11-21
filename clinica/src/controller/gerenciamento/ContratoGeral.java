@@ -63,14 +63,14 @@ public class ContratoGeral {
 
 	private static void contratar(Entidade entidade) {
 		PreparedStatement st = null;
+		
 		try {
-			st = conn.prepareStatement("INSERT INTO ? " + "(nome, cpf, senha) " + "VALUES " + "(?, ?, ?)",
+			st = conn.prepareStatement("INSERT INTO " + tableSimpleName(entidade.getClass().getSimpleName()) + "(nome, cpf, senha) " + "VALUES " + "(?, ?, ?)",
 					Statement.RETURN_GENERATED_KEYS);
 
-			st.setString(1, entidade.getClass().getName());
-			st.setString(2, entidade.getName());
-			st.setString(3, entidade.getCpf());
-			st.setString(4, entidade.getSenha());
+			st.setString(1, entidade.getName());
+			st.setString(2, entidade.getCpf());
+			st.setString(3, entidade.getSenha());
 
 			int rowsAffected = st.executeUpdate();
 
@@ -187,13 +187,13 @@ public class ContratoGeral {
 	
 	private static Entidade criarEntidade(String entity, String nome, String cpf, String senha) {
 		entity = entity.trim().toLowerCase();
-		if (entity.equals("funcionario")) {
+		if (entity.equals("Funcionarios")) {
 			return new Funcionario(nome, cpf, senha);
-		} else if (entity.equals("auxiliar")) {
+		} else if (entity.equals("AuxiliaresVeterinarios")) {
 			return new AuxiliarVeterinario(nome, cpf, senha);
-		} else if (entity.equals("veterinario")) {
+		} else if (entity.equals("Veterinarios")) {
 			return new Veterinario(nome, cpf, senha);
-		} else if (entity.equals("administrador")) {
+		} else if (entity.equals("Administradores")) {
 			return new Veterinario(nome, cpf, senha);
 		}
 		return null;
