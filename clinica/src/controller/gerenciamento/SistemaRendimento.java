@@ -1,4 +1,4 @@
-package controler.gerenciamento;
+package controller.gerenciamento;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

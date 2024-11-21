@@ -1,8 +1,6 @@
 package model.recursos;
 
-import java.time.LocalDate;
-
-public class Medicamento implements Prototype {
+public class Medicamento {
 	private int id;
 	private double preco;
 	private String laboratorio;
@@ -94,10 +92,5 @@ public class Medicamento implements Prototype {
 
 	public void setId(int id) {
 		this.id = id;
-	}
-
-	@Override
-	public Medicamento clone() {
-		return new Medicamento(id, preco, laboratorio, concentracao, nome, validade);
 	}
 }

@@ -1,6 +1,6 @@
 package model.entidades;
 
-import controler.gerenciamento.ContratoGeral;
+import controller.gerenciamento.ContratoGeral;
 import view.UI;
 
 public abstract class Entidade implements Operacoes {

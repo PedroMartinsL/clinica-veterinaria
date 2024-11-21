@@ -2,9 +2,9 @@ package model.entidades;
 
 import java.util.ArrayList;
 
-import controler.gerenciamento.ContratoGeral;
-import controler.gerenciamento.Estoque;
-import controler.gerenciamento.SistemaRendimento;
+import controller.gerenciamento.ContratoGeral;
+import controller.gerenciamento.Estoque;
+import controller.gerenciamento.SistemaRendimento;
 import view.UI;
 
 public class Administrador extends Entidade {
