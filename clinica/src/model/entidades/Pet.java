@@ -1,5 +1,14 @@
 package model.entidades;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+
+import db.DB;
+import db.DbException;
+
 public class Pet {
 	private int id;
 	private String animal;
@@ -80,4 +89,41 @@ public class Pet {
 		System.out.println("Raça: " + raca);
 		System.out.println("Idade: " + idade);
 	}
+	
+	
+	public void registrarPet() {
+        PreparedStatement st = null;
+        Connection conn = DB.getConnection();
+        try {
+            // Inserindo dados no banco de dados
+            st = conn.prepareStatement("INSERT INTO Pet (animal, cpf_dono, raca, idade) VALUES (?, ?, ?, ?)", 
+                    Statement.RETURN_GENERATED_KEYS);
+
+            // Passando os atributos para a consulta
+            st.setString(1, getAnimal()); 
+            st.setString(2, getCpfDono() );         
+            st.setString(3, getRaca());     
+            st.setInt(4, getIdade());
+
+            int rowsAffected = st.executeUpdate();
+
+            if (rowsAffected > 0) {
+                ResultSet rs = st.getGeneratedKeys();
+                if (rs.next()) {
+                    this.id = rs.getInt(1); 
+                }
+            } else {
+                throw new DbException("Unexpected error! No rows affected!");
+            }
+        } catch (SQLException e) {
+            throw new DbException(e.getMessage());
+        } finally {
+            DB.closeStatement(st);
+        }
+    }
+	
+	
+	
+	
+	
 }

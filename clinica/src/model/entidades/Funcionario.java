@@ -1,97 +1,13 @@
 package model.entidades;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
+import db.DB;
+import db.DbException;
 import model.entidades.enums.ConsultaStatus;
-import view.UI;
-
-public class Funcionario extends Entidade {
-
-    public Funcionario(String name, String cpf, String senha) {
-        super(name, cpf, senha);
-    }
-
-    @Override
-    public void operacoes() {
-        int caso = UI.getRequest(new String[] { 
-            "Cobrar consulta", 
-            "Solicitar consulta", 
-            "Buscar histórico de doenças e quadro financeiro",
-            "Fazer Cancelamento",  ///
-            "Finalizar operações" });
-
-        switch (caso) {
-            case 1:
-                cobrarConsulta();
-                break;
-            case 2: 
-                solicitarConsulta();
-                break;
-            case 3: 
-                buscarHistorico();
-                break;
-            case 4: 
-                System.out.println("Operações finalizadas.");   // Adicionar aqui! - Fazer update para Concluido ou cancelado (Se tiver agendado pode ter um metodo que pode cancelar)
-                break;
-            default:
-                throw new IllegalArgumentException("Número fora do intervalo");
-        }
-    }
-
-    public void cobrarConsulta() {
-        System.out.println("Digite o CPF do proprietário do pet:");
-        String cpf = UI.sc.nextLine();
-
-        //  exemplo
-        Pet pet = new Pet(cpf, "Nome do Pet", "Raça", 3); 
-        Consulta consulta = new Consulta(pet);     /// Vai te a divida, passar o id do pet
-    }
-
-    public void solicitarConsulta() {
-        System.out.println("Digite o CPF do proprietário do pet:");
-        String cpf = UI.sc.nextLine();
-        
-        // Nome, Data da consulta
-
-        // exemplo
-        Pet pet = new Pet(cpf, "Nome do Pet", "Raça", 3); 
-        Consulta consulta = new Consulta(pet, ConsultaStatus.AGENDADO);
-        
-   // p
-        
-        consulta.solicitarConsulta();  
-
-        System.out.println("Consulta solicitada com sucesso!");
-
-    }
-
-    public void buscarHistorico() {
-        System.out.println("Digite o CPF do proprietário do pet para buscar o histórico:");
-        String cpf = UI.sc.nextLine();
-
-        // exemplo
-        Pet pet = new Pet(cpf, "Nome do Pet", "Raça", 3); 
-
-        System.out.println("Buscando histórico de doenças e quadro financeiro do pet de CPF: " + cpf);
-        
-        ArrayList<Consulta> historico = pet.getConsultas(); 
-        if (historico.isEmpty()) {
-            System.out.println("Não há histórico de consultas.");
-        } else {
-            for (Consulta c : historico) {
-                System.out.println("Consulta de " + c.getDoenca() + " em " + c.getData());
-            }
-        }
-    }
-}
-
-
-
-
-
-
-/* package model.entidades;
-
 import view.UI;
 
 public class Funcionario extends Entidade {
@@ -101,47 +17,124 @@ public class Funcionario extends Entidade {
 	}
 
 	@Override
-	public void operacoes() {
-		int caso = UI.getRequest(new String[] { "Registar Pet", "Exibir renda da clínica",
-				"Operações de Estoque", "Exibir notificações", "Finalizar operações"}); // Botar Operacoes
+	public boolean operacoes() {
+		int caso = UI.getRequest(new String[] { "Registrar Pet", "Cobrar consulta", "Solicitar consulta",
+				"Buscar histórico de doenças e quadro financeiro", "Fazer Cancelamento", "Finalizar operações" });
+
 		switch (caso) {
-		case 1: // Metodo Registar Pet
-			System.out.println("Digite o cpf:");
-			String cpf = UI.sc.nextLine();
-			System.out.println("Digite o animal:");
-			String animal = UI.sc.nextLine();
-			System.out.println("Digite a raca:");
-			String raca = UI.sc.nextLine();
-			System.out.println("Digite a idade:");
-			int idade = UI.sc.nextInt();
-			Pet pet = new Pet(cpf,animal,raca,idade);
-			Consulta consulta = new Consulta(pet);
-			consulta.registrarPet();
-			consulta.solicitarConsulta();
-			System.out.println("Animal registrado Com Sucesso!");
+		case 1:
+			registrarPet();
+			break;
+		case 2:
+			cobrarConsulta();
+			break;
+		case 3:
+			solicitarConsulta();
+			break;
+		case 4:
+			buscarHistorico();
+			break;
+		case 5:
+			cancelarConsulta();
+			break;
+		case 6:
+			System.out.println("Operações finalizadas.");
 			break;
 		default:
-			throw new IllegalArgumentException("Number out of range");
+			return false;
 		}
+		return true;
 	}
 
-	@Override
-	public void addUser() {
+	public void registrarPet() {
+		System.out.println("Digite o CPF do proprietário:");
+		String cpf = UI.sc.nextLine();
+		System.out.println("Digite o nome do animal:");
+		String animal = UI.sc.nextLine();
+		System.out.println("Digite a raça do animal:");
+		String raca = UI.sc.nextLine();
+		System.out.println("Digite a idade do animal:");
+		int idade = UI.sc.nextInt();
 
+		// Criar o pet
+		Pet pet = new Pet(cpf, animal, raca, idade);
+
+		Consulta consulta = new Consulta(pet, ConsultaStatus.AGENDADO);
+
+		pet.registrarPet();
+		consulta.solicitarConsulta();
+		System.out.println("Animal registrado com sucesso e consulta agendada!");
 	}
 
-	@Override
-	public void removerUser() {
+	public void cobrarConsulta() { // id_pet
+		System.out.println("Digite o ID do pet:");
+		String cpf = UI.sc.nextLine();
+		Pet pet = new Pet(cpf, "Nome do Pet", "Raça", 3);
+		Consulta consulta = new Consulta(pet); // Vai associar a consulta ao pet
 
-	}
-
-	public void cobrarConsulta(Pet pet) {
+		// Lógica de cobrança (pode ser expandida conforme necessário)
 		System.out.println("Cobrando consulta para o pet: " + pet.getAnimal());
 	}
 
-	public void solicitarConsulta(Pet pet) {
-		System.out.println("Solicitando consulta para o pet: " + pet.getAnimal());
-	}
-}  
+	public void solicitarConsulta() {
 
-*/
+		System.out.println("Digite o CPF do proprietário do pet:");
+		String cpf = UI.sc.nextLine();
+		System.out.println("Digite o nome do animal:");
+		String animal = UI.sc.nextLine();
+		System.out.println("Digite a raça do animal:");
+		String raca = UI.sc.nextLine();
+		System.out.println("Digite a idade do animal:");
+		int idade = UI.sc.nextInt();
+		UI.sc.nextLine();
+
+		Pet pet = new Pet(cpf, animal, raca, idade);
+
+		Consulta consulta = new Consulta(pet, ConsultaStatus.AGENDADO);
+
+		consulta.solicitarConsulta();
+
+		System.out.println("Consulta solicitada com sucesso para o pet: " + animal);
+	}
+
+	public void buscarHistorico() {
+		System.out.println("Digite o CPF do proprietário do pet para buscar o histórico:");
+		String cpf = UI.sc.nextLine();
+
+		Pet pet = new Pet(cpf, "Nome do Pet", "Raça", 3);
+
+		System.out.println("Buscando histórico de doenças e quadro financeiro do pet de CPF: " + cpf);
+
+		ArrayList<Consulta> historico = pet.getConsultas();
+		if (historico.isEmpty()) {
+			System.out.println("Não há histórico de consultas.");
+		} else {
+			for (Consulta c : historico) {
+				System.out.println("Consulta de " + c.getDoenca() + " em " + c.getData());
+			}
+		}
+	}
+
+	public static void cancelarConsulta() {
+
+		PreparedStatement st = null;
+		Connection conn = DB.getConnection();
+
+		System.out.println("Digite o ID do Pet:");
+		int id = UI.sc.nextInt();
+
+		try {
+			st = conn.prepareStatement("UPDATE Consultas " + "SET Status = 4 where id = ?");
+
+			st.setInt(1, id);
+			st.executeUpdate();
+			System.out.println("Consulta cancelada com sucesso para o pet de ID: " + id);
+
+		} catch (SQLException e) {
+			throw new DbException(e.getMessage());
+		} finally {
+			DB.closeStatement(st);
+		}
+
+	}
+}

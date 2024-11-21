@@ -12,18 +12,18 @@ import db.DbException;
 import model.entidades.enums.ConsultaStatus;
 
 public class Consulta {
-    private int id; // id da consulta
+    private int id;
     private Pet pet;
     private String doenca;
-    private double valor; // valor da consulta
+    private double valor; 
     private Integer consultaStatus;
-    private LocalDateTime data; // data da consulta
+    private LocalDateTime data; 
     private Connection conn = DB.getConnection();
 
-    // Construtor que aceita um Pet e o Status da Consulta
+    
     public Consulta(Pet pet, ConsultaStatus status) {
         this.pet = pet;
-        this.data = LocalDateTime.now(); // inicializando com a data atual
+        this.data = LocalDateTime.now(); 
         setConsultaStatus(status);
     }
 
@@ -75,36 +75,6 @@ public class Consulta {
     public void setConsultaStatus(ConsultaStatus consultaStatus) {
         if (consultaStatus != null) {
             this.consultaStatus = consultaStatus.getCode();
-        }
-    }
-
-    // Método para registrar a consulta no banco de dados
-    public void registrarConsulta() {
-        PreparedStatement st = null;
-        try {
-            // Inserindo dados no banco de dados
-            st = conn.prepareStatement("INSERT INTO Consulta (data, idPet, idStatus) VALUES (?, ?, ?)", 
-                    Statement.RETURN_GENERATED_KEYS);
-
-            // Passando os atributos para a consulta
-            st.setString(1, data.toString()); // Data da consulta
-            st.setInt(2, pet.getId());         // ID do pet
-            st.setInt(3, consultaStatus);     // Status da consulta (como código)
-
-            int rowsAffected = st.executeUpdate();
-
-            if (rowsAffected > 0) {
-                ResultSet rs = st.getGeneratedKeys();
-                if (rs.next()) {
-                    this.id = rs.getInt(1); // Recupera o ID gerado
-                }
-            } else {
-                throw new DbException("Unexpected error! No rows affected!");
-            }
-        } catch (SQLException e) {
-            throw new DbException(e.getMessage());
-        } finally {
-            DB.closeStatement(st);
         }
     }
 
