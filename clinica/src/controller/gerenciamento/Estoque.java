@@ -98,9 +98,9 @@ public class Estoque {
 				
 				if (quantidade <= reservaEstoque) {
 					retirarMedicamento(rs.getInt("id_medicamento"), quantidade, responsavel, idConsulta); // alterar lógica aqui
-					checarEstoque(medicamento);
-									
-					return instanciateMedicamento(rs);
+					Medicamento medEstoque = instanciateMedicamento(rs);
+					checarEstoque(medEstoque);
+					return medEstoque;
 				} else {
 					System.out.println("A quantidade encontrada do medicamento está abaixo do esperado!");
 					System.out.printf("Medicamento: %s - Quantidade Solicitada: %d - Disponível: %d\n\n",
@@ -198,15 +198,27 @@ public class Estoque {
 			st.setString(1, medicamento.getNome());
 			st.setString(2, medicamento.getLaboratorio());
 			st.setDouble(3, medicamento.getConcentracao());
-
+			
 			st.executeUpdate();
-
+			
+// 			depois adicionar a tabela de despesa
+//			st = conn.prepareStatement("INSERT INTO Reabastecimentos (medicamento_id, data_compra, valor, quantidade) " + "VALUES " + "(?, ?, ?, ?)",
+//					Statement.RETURN_GENERATED_KEYS);
+//			
+//			
+//			st.setInt(1, medicamento.getId()); 
+//            st.setString(2, LocalDateTime.now().toString()); 
+//            st.setDouble(3, medicamento.getPreco() * //quantidade); 
+//            st.setInt(4, //quantidade);
+//
+//            st.executeUpdate();
+            
 		} catch (SQLException e) {
 			throw new DbException(e.getMessage());
 		} finally {
 			DB.closeStatement(st);
 		}
-		// depois adicionar a tabela de despesa
+		
 	}
 
 	public static void notificarAdm(String msg) {
