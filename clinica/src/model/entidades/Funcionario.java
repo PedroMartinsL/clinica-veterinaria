@@ -57,7 +57,7 @@ public class Funcionario extends Entidade {
 		int idade = UI.sc.nextInt();
 
 		// Criar o pet
-		Pet pet = new Pet(cpf, animal, raca, idade);
+		Pet pet = new Pet(animal, cpf, raca, idade);
 
 		Consulta consulta = new Consulta(pet, ConsultaStatus.AGENDADO);
 
@@ -228,17 +228,19 @@ public class Funcionario extends Entidade {
 		PreparedStatement st = null;
 		Connection conn = DB.getConnection();
 
-		System.out.println("Digite o ID do Pet:");
+		System.out.println("Digite o ID da Consulta:");
 		int id = UI.sc.nextInt();
+		UI.sc.nextLine();
 
 		try {
 			st = conn.prepareStatement("UPDATE Consultas " + "SET Status = 4 where id = ?");
 
 			st.setInt(1, id);
 			st.executeUpdate();
-			System.out.println("Consulta cancelada com sucesso para o pet de ID: " + id);
+			System.out.println("Consulta cancelada com sucesso para a consulta de ID: " + id);
 
 		} catch (SQLException e) {
+			System.out.println("Caiu Aqui!");
 			throw new DbException(e.getMessage());
 		} finally {
 			DB.closeStatement(st);

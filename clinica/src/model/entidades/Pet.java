@@ -91,12 +91,12 @@ public class Pet {
 	}
 	
 	
-	public void registrarPet() {
+	public void registrarPet() {		
         PreparedStatement st = null;
         Connection conn = DB.getConnection();
         try {
             // Inserindo dados no banco de dados
-            st = conn.prepareStatement("INSERT INTO Pet (animal, cpf_dono, raca, idade) VALUES (?, ?, ?, ?)", 
+            st = conn.prepareStatement("INSERT INTO Pets (animal, cpf_dono, raca, idade) VALUES (?, ?, ?, ?)", 
                     Statement.RETURN_GENERATED_KEYS);
 
             // Passando os atributos para a consulta
@@ -110,7 +110,7 @@ public class Pet {
             if (rowsAffected > 0) {
                 ResultSet rs = st.getGeneratedKeys();
                 if (rs.next()) {
-                    this.id = rs.getInt(1); 
+                    this.id = rs.getInt(1);
                 }
             } else {
                 throw new DbException("Unexpected error! No rows affected!");
@@ -120,5 +120,5 @@ public class Pet {
         } finally {
             DB.closeStatement(st);
         }
-    }
+    } 
 }

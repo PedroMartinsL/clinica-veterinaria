@@ -8,6 +8,7 @@ import java.sql.Statement;
 
 import db.DB;
 import db.DbException;
+import model.entidades.Administrador;
 import model.entidades.AuxiliarVeterinario;
 import model.entidades.Entidade;
 import model.entidades.Funcionario;
@@ -30,7 +31,7 @@ public class ContratoGeral {
 			System.out.println("Digite a senha para o contrato: ");
 			String senha = UI.sc.nextLine();
 
-			System.out.println("Digite uma entidade a ser contratada: auxiliar, funcionario, veterinario");
+			System.out.println("Digite uma entidade a ser contratada: auxiliar, funcionario, veterinario, administrador");
 			Entidade contribuinte;
 			while (true) {
 				contribuinte = criarEntidade(UI.sc.nextLine(), nome, cpf, senha);
@@ -155,7 +156,7 @@ public class ContratoGeral {
 	}
 
 	public static Entidade confirmarUser(String cpf, String senha) {
-	    String[] tabelas = {"Funcionarios", "AuxiliaresVeterinarios", "Veterinarios", "Administradores"};
+	    String[] tabelas = {"Funcionarios", "Administradores","AuxiliaresVeterinarios", "Veterinarios"};
 	    PreparedStatement st = null;
 	    ResultSet rs = null;
 
@@ -165,6 +166,7 @@ public class ContratoGeral {
 	            st = conn.prepareStatement(query);
 	            st.setString(1, cpf);
 	            st.setString(2, senha);
+	           
 
 	            rs = st.executeQuery();
 
@@ -186,7 +188,7 @@ public class ContratoGeral {
 	}
 	
 	private static Entidade criarEntidade(String entity, String nome, String cpf, String senha) {
-		entity = entity.trim().toLowerCase();
+		entity = entity.trim();
 		if (entity.equals("Funcionarios")) {
 			return new Funcionario(nome, cpf, senha);
 		} else if (entity.equals("AuxiliaresVeterinarios")) {
@@ -194,7 +196,7 @@ public class ContratoGeral {
 		} else if (entity.equals("Veterinarios")) {
 			return new Veterinario(nome, cpf, senha);
 		} else if (entity.equals("Administradores")) {
-			return new Veterinario(nome, cpf, senha);
+			return new Administrador(nome, cpf, senha);
 		}
 		return null;
 	}
