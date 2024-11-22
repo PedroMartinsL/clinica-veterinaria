@@ -98,7 +98,7 @@ public class Pet {
             // Inserindo dados no banco de dados
             st = conn.prepareStatement("INSERT INTO Pets (animal, cpf_dono, raca, idade) VALUES (?, ?, ?, ?)", 
                     Statement.RETURN_GENERATED_KEYS);
-
+            
             // Passando os atributos para a consulta
             st.setString(1, getAnimal()); 
             st.setString(2, getCpfDono() );         
