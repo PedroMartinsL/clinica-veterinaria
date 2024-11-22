@@ -31,10 +31,11 @@ public class ContratoGeral {
 			System.out.println("Digite a senha para o contrato: ");
 			String senha = UI.sc.nextLine();
 
-			System.out.println("Digite uma entidade a ser contratada: auxiliar, funcionario, veterinario, administrador");
+			System.out.println("Digite uma entidade a ser contratada: ");
+			String entidade = UI.getRequest(new String [] {"Funcionario", "Auxiliar", "Veterinario", "Administrador"}) + "";
 			Entidade contribuinte;
 			while (true) {
-				contribuinte = criarEntidade(UI.sc.nextLine(), nome, cpf, senha);
+				contribuinte = criarEntidade(entidade, nome, cpf, senha);
 				if (contribuinte == null)
 					System.out.println("Categoria de entidade inválida, tente novamente.");
 				else
@@ -189,13 +190,13 @@ public class ContratoGeral {
 	
 	private static Entidade criarEntidade(String entity, String nome, String cpf, String senha) {
 		entity = entity.trim();
-		if (entity.equals("Funcionarios")) {
+		if (entity.equals("Funcionarios") || entity.equals("1")) {
 			return new Funcionario(nome, cpf, senha);
-		} else if (entity.equals("AuxiliaresVeterinarios")) {
+		} else if (entity.equals("AuxiliaresVeterinarios") || entity.equals("2")) {
 			return new AuxiliarVeterinario(nome, cpf, senha);
-		} else if (entity.equals("Veterinarios")) {
+		} else if (entity.equals("Veterinarios") || entity.equals("3")) {
 			return new Veterinario(nome, cpf, senha);
-		} else if (entity.equals("Administradores")) {
+		} else if (entity.equals("Administradores") || entity.equals("4")) {
 			return new Administrador(nome, cpf, senha);
 		}
 		return null;
