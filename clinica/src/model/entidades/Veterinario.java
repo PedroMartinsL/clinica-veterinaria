@@ -153,6 +153,7 @@ public class Veterinario extends Entidade {
 		
 	}
 	// atualizar o status da consulta para numero 3, em dívida
+	//atualizar e colocar no banco de dados
 	
 	
 	//realizar atendimento: chama metodo que atualiza status, id, id aux veterinario, construir veterinsario só com cpf, chama operaão de veterinario
