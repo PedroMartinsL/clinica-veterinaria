@@ -83,7 +83,7 @@ public class Consulta {
         PreparedStatement st = null;
         ResultSet rs = null;
         try {
-            st = conn.prepareStatement("INSERT INTO Consulta (data, idPet, idStatus) VALUES (?, ?, ?)", 
+            st = conn.prepareStatement("INSERT INTO Consultas (data, pet_id, status) VALUES (?, ?, ?)", 
                     Statement.RETURN_GENERATED_KEYS);
 
             // Definindo os parâmetros da consulta

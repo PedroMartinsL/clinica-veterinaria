@@ -8,6 +8,7 @@ import java.sql.Statement;
 
 import db.DB;
 import db.DbException;
+import model.entidades.Administrador;
 import model.entidades.AuxiliarVeterinario;
 import model.entidades.Entidade;
 import model.entidades.Funcionario;
@@ -30,30 +31,23 @@ public class ContratoGeral {
 			System.out.println("Digite a senha para o contrato: ");
 			String senha = UI.sc.nextLine();
 
-			System.out.println("Digite uma entidade a ser contratada: auxiliar, funcionario, veterinario");
-			Entidade contribuinte;
-			while (true) {
-				contribuinte = criarEntidade(UI.sc.nextLine(), nome, cpf, senha);
-				if (contribuinte == null)
-					System.out.println("Categoria de entidade inválida, tente novamente.");
-				else
-					break;
-			}
-			contratar(contribuinte);
+			System.out.println("Digite o cargo a ser contratada: ");
+			String entidade = UI.getRequest(
+					new String[] {"Funcionario", "AuxiliarVeterinario", "Veterinario", "Administrador" }) + "";
+			contratar(criarEntidade(entidade, nome, cpf, senha));
 			break;
 		case 2:
 			System.out.print("Digite o cpf para demitir um contratado: ");
 			cpf = UI.sc.nextLine();
-			System.out.print("\nDigite o cargo: ");
-			String cargo = UI.sc.nextLine();
-			demitir(cpf, cargo);
+			demitir(cpf);
 			break;
 		case 3:
 			System.out.println("Digite o cpf para ver os dados do contratado: ");
 			cpf = UI.sc.nextLine();
-			System.out.print("\nDigite o cargo: ");
-			cargo = UI.sc.nextLine();
-			dadosUser(cpf, cargo);
+			String resultado = dadosUser(cpf);
+			System.out.println(resultado != null 
+				    ? resultado
+				    : "\nO associado de cpf informado não foi encontrado.");	
 			break;
 		default:
 			System.out.println("Saindo das operações...");
@@ -63,10 +57,9 @@ public class ContratoGeral {
 
 	private static void contratar(Entidade entidade) {
 		PreparedStatement st = null;
-		
 		try {
-			st = conn.prepareStatement("INSERT INTO " + tableSimpleName(entidade.getClass().getSimpleName()) + "(nome, cpf, senha) " + "VALUES " + "(?, ?, ?)",
-					Statement.RETURN_GENERATED_KEYS);
+			st = conn.prepareStatement("INSERT INTO " + tableSimpleName(entidade.getClass().getSimpleName())
+					+ "(nome, cpf, senha) " + "VALUES " + "(?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
 
 			st.setString(1, entidade.getName());
 			st.setString(2, entidade.getCpf());
@@ -79,6 +72,7 @@ public class ContratoGeral {
 				if (rs.next()) {
 					int id = rs.getInt(1); // recuperar o valor da primeira coluna
 					entidade.setId(id);
+					System.out.printf("Entidade de cpf: %s contratado%n", entidade.getCpf());
 				}
 				DB.closeResultSet(rs);
 			} else {
@@ -92,24 +86,27 @@ public class ContratoGeral {
 		}
 	}
 
-	private static void demitir(String cpf, String funcao) {
+	private static void demitir(String cpf) {
 		PreparedStatement st = null;
+		String[] tabelas = { "Funcionarios", "Administradores", "AuxiliaresVeterinarios", "Veterinarios" };
 		try {
 
-			String tableName = tableSimpleName(funcao);
+			for (String tabela : tabelas) {
 
-			st = conn.prepareStatement("DELETE FROM " + tableName + "WHERE cpf = (?)");
+				st = conn.prepareStatement("DELETE FROM " + tabela + " WHERE cpf = ?");
 
-			st.setString(1, cpf);
+				st.setString(1, cpf);
 
-			int rowsAffected = st.executeUpdate();
+				int rowsAffected = st.executeUpdate();
 
-			if (rowsAffected > 0) {
-				System.out.printf("Funcionario de cpf: %s demititdo%n", cpf);
-			} else {
-				throw new DbException("Unexpected error! No rows affected!");
+				if (rowsAffected > 0) {
+					System.out.printf("Entidade de cpf: %s demitido%n", cpf);
+					break;
+				} else {
+					throw new DbException("Unexpected error! No rows affected!");
+				}
+
 			}
-
 		} catch (SQLException e) {
 			throw new DbException(e.getMessage());
 		} finally {
@@ -117,22 +114,24 @@ public class ContratoGeral {
 		}
 	}
 
-	private static void dadosUser(String cpf, String funcao) {
+	private static String dadosUser(String cpf) {
 		PreparedStatement st = null;
 		ResultSet rs = null;
+		String[] tabelas = { "Funcionarios", "Administradores", "AuxiliaresVeterinarios", "Veterinarios" };
 		try {
+			for (String tabela : tabelas) {
 
-			String tableName = tableSimpleName(funcao);
+				st = conn.prepareStatement("SELECT * FROM " + tabela + " WHERE cpf = ?");
 
-			st = conn.prepareStatement("SELECT * FROM " + tableName + " WHERE cpf = ? ");
+				st.setString(1, cpf);
 
-			st.setString(1, cpf);
+				rs = st.executeQuery();
 
-			rs = st.executeQuery(); // Faz com que o comando seja executado e caindo no rs
-
-			if (rs.next()) {
-				String.format("[CPF: %s, Nome: %s, Email: %s]", rs.getString("cpf"), rs.getString("nome"),
-						rs.getString("email"));
+				if (rs.next()) {
+					return String.format("[CPF: %s, Nome: %s, Senha: %s]", rs.getString("cpf"), rs.getString("nome"),
+							rs.getString("senha"));
+					
+				}
 			}
 		} catch (SQLException e) {
 			throw new DbException(e.getMessage());
@@ -140,6 +139,7 @@ public class ContratoGeral {
 			DB.closeStatement(st);
 			DB.closeResultSet(rs);
 		}
+		return null;
 	}
 
 	private static String tableSimpleName(String simpleName) {
@@ -155,46 +155,46 @@ public class ContratoGeral {
 	}
 
 	public static Entidade confirmarUser(String cpf, String senha) {
-	    String[] tabelas = {"Funcionarios", "AuxiliaresVeterinarios", "Veterinarios", "Administradores"};
-	    PreparedStatement st = null;
-	    ResultSet rs = null;
+		String[] tabelas = { "Funcionarios", "Administradores", "AuxiliaresVeterinarios", "Veterinarios" };
+		PreparedStatement st = null;
+		ResultSet rs = null;
 
-	    try {
-	        for (String tabela : tabelas) {
-	            String query = "SELECT * FROM " + tabela + " WHERE cpf = ? AND senha = ?";
-	            st = conn.prepareStatement(query);
-	            st.setString(1, cpf);
-	            st.setString(2, senha);
+		try {
+			for (String tabela : tabelas) {
+				String query = "SELECT * FROM " + tabela + " WHERE cpf = ? AND senha = ?";
+				st = conn.prepareStatement(query);
+				st.setString(1, cpf);
+				st.setString(2, senha);
 
-	            rs = st.executeQuery();
+				rs = st.executeQuery();
 
-	            if (rs.next()) {
-	                return criarEntidade(tabela, rs.getString("nome"), rs.getString("cpf"), rs.getString("senha"));
-	            }
-	        }
+				if (rs.next()) {
+					return criarEntidade(tabela, rs.getString("nome"), rs.getString("cpf"), rs.getString("senha"));
+				}
+			}
 
-	        // Se nenhum registro for encontrado
-	        System.out.println("CPF ou senha incorretos");
-	        return null;
+			// Se nenhum registro for encontrado
+			System.out.println("CPF ou senha incorretos");
+			return null;
 
-	    } catch (SQLException e) {
-	        throw new DbException(e.getMessage());
-	    } finally {
-	        DB.closeStatement(st);
-	        DB.closeResultSet(rs);
-	    }
+		} catch (SQLException e) {
+			throw new DbException(e.getMessage());
+		} finally {
+			DB.closeStatement(st);
+			DB.closeResultSet(rs);
+		}
 	}
-	
+
 	private static Entidade criarEntidade(String entity, String nome, String cpf, String senha) {
-		entity = entity.trim().toLowerCase();
-		if (entity.equals("Funcionarios")) {
+		entity = entity.trim();
+		if (entity.equals("Funcionarios") || entity.equals("1")) {
 			return new Funcionario(nome, cpf, senha);
-		} else if (entity.equals("AuxiliaresVeterinarios")) {
+		} else if (entity.equals("AuxiliaresVeterinarios") || entity.equals("2")) {
 			return new AuxiliarVeterinario(nome, cpf, senha);
-		} else if (entity.equals("Veterinarios")) {
+		} else if (entity.equals("Veterinarios") || entity.equals("3")) {
 			return new Veterinario(nome, cpf, senha);
-		} else if (entity.equals("Administradores")) {
-			return new Veterinario(nome, cpf, senha);
+		} else if (entity.equals("Administradores") || entity.equals("4")) {
+			return new Administrador(nome, cpf, senha);
 		}
 		return null;
 	}
