@@ -61,7 +61,7 @@ public class FuncionarioResource {
 	
 	@PatchMapping("/{id}")
 	public ResponseEntity<Funcionario> partialUpdate(@PathVariable String id, @RequestBody Funcionario obj) {
-	    Funcionario updatedPet = service.updatePatch(id, obj);
-	    return ResponseEntity.ok().body(updatedPet);
+		obj = service.updatePatch(id, obj);
+	    return ResponseEntity.ok().body(obj);
 	}
 }

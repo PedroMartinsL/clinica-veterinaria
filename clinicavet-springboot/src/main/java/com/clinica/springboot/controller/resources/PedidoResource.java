@@ -61,7 +61,7 @@ public class PedidoResource {
 	
 	@PatchMapping("/{id}")
 	public ResponseEntity<Pedido> partialUpdate(@PathVariable Long id, @RequestBody Pedido obj) {
-	    Pedido updatedPet = service.updatePatch(id, obj);
-	    return ResponseEntity.ok().body(updatedPet);
+		obj = service.updatePatch(id, obj);
+	    return ResponseEntity.ok().body(obj);
 	}
 }

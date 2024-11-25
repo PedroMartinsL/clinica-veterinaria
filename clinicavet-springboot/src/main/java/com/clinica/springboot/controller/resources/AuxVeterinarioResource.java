@@ -61,7 +61,7 @@ public class AuxVeterinarioResource {
 	
 	@PatchMapping("/{id}")
 	public ResponseEntity<AuxVeterinario> partialUpdate(@PathVariable String id, @RequestBody AuxVeterinario obj) {
-	    AuxVeterinario updatedPet = service.updatePatch(id, obj);
-	    return ResponseEntity.ok().body(updatedPet);
+		obj = service.updatePatch(id, obj);
+	    return ResponseEntity.ok().body(obj);
 	}
 }

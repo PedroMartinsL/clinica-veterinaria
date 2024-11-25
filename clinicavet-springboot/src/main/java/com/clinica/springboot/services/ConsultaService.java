@@ -59,6 +59,7 @@ public class ConsultaService {
 		entity.setDoenca(obj.getDoenca());
 		entity.setVeterinario(obj.getVeterinario());
 		entity.setAuxVeterinario(obj.getAuxVeterinario());
+		entity.setData(obj.getData());
 	}
 	
 	public Consulta updatePatch(Long id, Consulta obj) {
@@ -83,6 +84,9 @@ public class ConsultaService {
 	    }
 	    if (obj.getVeterinario() != null) {
 	    	entity.setVeterinario(obj.getVeterinario());
+	    }
+	    if (obj.getData() != null) {
+	    	entity.setData(obj.getData());
 	    }
 	}
 }

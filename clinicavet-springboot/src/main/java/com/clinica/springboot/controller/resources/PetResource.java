@@ -62,7 +62,7 @@ public class PetResource {
 	
 	@PatchMapping("/{id}")
 	public ResponseEntity<Pet> partialUpdate(@PathVariable Long id, @RequestBody Pet obj) {
-	    Pet updatedPet = service.updatePatch(id, obj);
-	    return ResponseEntity.ok().body(updatedPet);
+		obj = service.updatePatch(id, obj);
+	    return ResponseEntity.ok().body(obj);
 	}
 }

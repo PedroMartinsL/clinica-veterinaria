@@ -61,7 +61,7 @@ public class AdministradorResource {
 	
 	@PatchMapping("/{id}")
 	public ResponseEntity<Administrador> partialUpdate(@PathVariable String id, @RequestBody Administrador obj) {
-	    Administrador updatedPet = service.updatePatch(id, obj);
-	    return ResponseEntity.ok().body(updatedPet);
+		obj = service.updatePatch(id, obj);
+	    return ResponseEntity.ok().body(obj);
 	}
 }

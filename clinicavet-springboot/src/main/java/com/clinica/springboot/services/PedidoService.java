@@ -57,6 +57,7 @@ public class PedidoService {
 	private void updateData(Pedido entity, Pedido obj) {
 		entity.setMedicamento(obj.getMedicamento());
 		entity.setQuantidade(obj.getQuantidade());
+		entity.setConsulta(obj.getConsulta());
 	}
 	
 	public Pedido updatePatch(Long id, Pedido obj) {
@@ -75,6 +76,9 @@ public class PedidoService {
 		}
 		if (obj.getQuantidade() != null) {
 			entity.setQuantidade(obj.getQuantidade());
+		}
+		if (obj.getConsulta() != null) {
+			entity.setConsulta(obj.getConsulta());
 		}
 	}
 }

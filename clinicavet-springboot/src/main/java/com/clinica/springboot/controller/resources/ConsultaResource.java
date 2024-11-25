@@ -61,7 +61,7 @@ public class ConsultaResource {
 	
 	@PatchMapping("/{id}")
 	public ResponseEntity<Consulta> partialUpdate(@PathVariable Long id, @RequestBody Consulta obj) {
-	    Consulta updatedPet = service.updatePatch(id, obj);
-	    return ResponseEntity.ok().body(updatedPet);
+		obj = service.updatePatch(id, obj);
+	    return ResponseEntity.ok().body(obj);
 	}
 }

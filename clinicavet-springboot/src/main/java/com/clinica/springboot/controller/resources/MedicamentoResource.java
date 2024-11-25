@@ -61,7 +61,7 @@ public class MedicamentoResource {
 	
 	@PatchMapping("/{id}")
 	public ResponseEntity<Medicamento> partialUpdate(@PathVariable Long id, @RequestBody Medicamento obj) {
-	    Medicamento updatedMedicamento = service.updatePatch(id, obj);
-	    return ResponseEntity.ok().body(updatedMedicamento);
+		obj = service.updatePatch(id, obj);
+	    return ResponseEntity.ok().body(obj);
 	}
 }

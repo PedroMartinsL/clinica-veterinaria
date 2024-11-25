@@ -61,7 +61,7 @@ public class VeterinarioResource {
 	
 	@PatchMapping("/{id}")
 	public ResponseEntity<Veterinario> partialUpdate(@PathVariable String id, @RequestBody Veterinario obj) {
-	    Veterinario updatedPet = service.updatePatch(id, obj);
-	    return ResponseEntity.ok().body(updatedPet);
+	    obj = service.updatePatch(id, obj);
+	    return ResponseEntity.ok().body(obj);
 	}
 }
