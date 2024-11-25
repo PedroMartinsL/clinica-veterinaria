@@ -41,7 +41,7 @@ public class Consulta implements Serializable {
 	private Pet pet;
 	
 	@JsonIgnore
-	@OneToMany
+	@OneToMany(mappedBy = "consulta")
 	private List<Pedido> pedidos;
 	
 	private String doenca;
