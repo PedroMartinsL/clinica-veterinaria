@@ -39,84 +39,78 @@ public class AuxiliarVeterinario extends Veterinario {
 
 	@Override
 	public boolean operacoes() {
-		int request = UI.getRequest(new String[] { "Operações de contratados", "Exibir renda da clínica",
-				"Operações de Estoque", "Exibir notificações", "Finalizar operações" });
+		int request = UI.getRequest(new String[] { "Listar Consulta", "Aplicar Medicamento", "Exibir notificações", "Finalizar operações" });
 		
 		switch (request) {
 		case 1:
-				System.out.println("Atendimento ao Pet realizado.");
-				break;
-
-			case 2:
-				aplicarMedicamento(null, null); // Chama o método para aplicar medicação
-				break;
-
-			case 3:
-				  System.out.println("Saindo das operações...");
-	              break; 
-	          default:
-	              return false;
-	      }
-		return true;
+            listarConsultas();
+            break;
+        case 2:
+            aplicarMedicamento(null, null); // Aqui, passe os parâmetros reais conforme o fluxo.
+            break;
+        case 3:
+            System.out.println("Saindo das operações...");
+            return false;
+        default:
+            System.out.println("Opção inválida!");
+    }
+    return true;
 	}
 
 	public static void listarConsultas() {
-		PreparedStatement st = null;
-		ResultSet rs = null;
+	    PreparedStatement st = null;
+	    ResultSet rs = null;
 
-		try {
-			st = conn
-					.prepareStatement("SELECT * FROM Consultas");
-			rs = st.executeQuery();
+	    try {
+	        st = conn.prepareStatement("SELECT id, nome_pet, status FROM Consultas");
+	        rs = st.executeQuery();
 
-			System.out.println("Medicamentos disponíveis:");
-			System.out.printf("%-20s %-10s %-15s %-15s %-10s %-10s%n", "Nome", "Preço", "Laboratório", "Quantidade",
-					"Concentração", "Contrato");
-			System.out.println("-----------------------------------------------------------------------------------");
+	        System.out.printf("%-10s %-20s %-15s%n", 
+	            "ID", "Nome do Pet", "Data da Consulta", "Status");
+	        System.out.println("---------------------------------------------------------------");
 
-			while (rs.next()) {
-				String nome = rs.getString("nome");
-				double preco = rs.getDouble("preco");
-				String laboratorio = rs.getString("laboratorio");
-				int quantidade = rs.getInt("quantidade");
-				double concentracao = rs.getDouble("concentracao");
-				boolean contrato = rs.getBoolean("contrato");
+	        while (rs.next()) {
+	            String id = rs.getString("id");
+	            String nomePet = rs.getString("nome_pet");
+	            String dataConsulta = rs.getString("data_consulta");
+	            String status = rs.getString("status");
 
-				System.out.printf("%-20s %-10.2f %-15s %-15s %-10.2f %-10s%n", nome, preco, laboratorio, quantidade,
-						concentracao, contrato ? "Sim" : "Não");
-			}
+	            System.out.printf("%-10s %-20s %-20s %-15s%n", 
+	                id, nomePet, dataConsulta, status);
+	        }
 
-		} catch (SQLException e) {
-			throw new DbException(e.getMessage());
-		} finally {
-			DB.closeStatement(st);
-			DB.closeResultSet(rs);
-		}
+	    } catch (SQLException e) {
+	        throw new DbException(e.getMessage());
+	    } finally {
+	        DB.closeStatement(st);
+	        DB.closeResultSet(rs);
+	    }
 	}
 
-	void aplicarMedicamento(Map<Medicamento, Integer> mapMedicamentos, Pet pet) {
-//recebe e vai aplicando
-		System.out.print("Informe o nome do medicamento: ");
-		String nomeMedicamento = sc.nextLine();
+	void aplicarMedicamento(Map<Medicamento, Integer> mapMedicamentos, Pet pet, Entidade veterinario) {
+	    System.out.print("Informe o nome do medicamento: ");
+	    String nomeMedicamento = sc.nextLine();
 
-		System.out.print("Informe a quantidade do medicamento: ");
-		int quantidadeMedicamento = sc.nextInt();
-		sc.nextLine();
+	    System.out.print("Informe a quantidade do medicamento: ");
+	    int quantidadeMedicamento = sc.nextInt();
+	    sc.nextLine();
 
-		// construtor do medicamento
-		Medicamento medicamento = new Medicamento(0, nomeMedicamento, 0, null, null, null);
+	    // Cria o objeto Medicamento
+	    Medicamento medicamento = new Medicamento();
 
-		// armazena o medicamento e sua quantidade
-		Map<Medicamento, Integer> mapMedicamentos = new HashMap<>();
-		mapMedicamentos.put(medicamento, quantidadeMedicamento);
+	    // Cria e adiciona o medicamento e a quantidade ao mapa
+	    mapMedicamentos = new HashMap<>();
+	    mapMedicamentos.put(medicamento, quantidadeMedicamento);
 
-		Pedido pedido = new Pedido(auxVeterinario aux, mapMedicamentos);
+	    // Cria o pedido
+	    Pedido pedido = new Pedido(veterinario, mapMedicamentos, quantidadeMedicamento);
 
-		// solicitar medicamento
-		solicitarMedicamento(pedido);
+	    // Chama o método de solicitar medicamento
+	    solicitarMedicamento(pedido);
 
-		System.out.println("Aplicando " + quantidadeMedicamento + " doses de " + nomeMedicamento
-				);
+	    // Exibe a aplicação do medicamento
+	    System.out.println("Aplicando " + quantidadeMedicamento + " doses de " + nomeMedicamento);
+
 	}
 
 	private void solicitarMedicamento(Pedido pedido) {
@@ -131,6 +125,6 @@ public class AuxiliarVeterinario extends Veterinario {
 	
 	//realizar atendimento: chama metodo que atualiza status, id, id veterinario, construir veterinsario só com cpf, chama operaão de veterinario
 	//Checar diagnostico e prescrever medicaçao, aplicar medicamentos e chaamae o metodo de atualizar status para divida
-	
+
 	
 }
