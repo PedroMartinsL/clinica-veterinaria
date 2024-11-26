@@ -10,8 +10,10 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
 
 @Entity
+@Table(name = "auxiliares_vet")
 public class AuxVeterinario implements Serializable {
 
 	private static final long serialVersionUID = 1L;

@@ -16,8 +16,10 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
 
 @Entity
+@Table(name = "consultas")
 public class Consulta implements Serializable {
 	private static final long serialVersionUID = 1L;
 
@@ -39,11 +41,11 @@ public class Consulta implements Serializable {
 	@ManyToOne
 	@JoinColumn(name = "pet_id")
 	private Pet pet;
-	
+
 	@JsonIgnore
 	@OneToMany(mappedBy = "consulta")
 	private List<Pedido> pedidos;
-	
+
 	private String doenca;
 	private Integer consultaStatus;
 
@@ -108,6 +110,14 @@ public class Consulta implements Serializable {
 
 	public void setVeterinario(Veterinario veterinario) {
 		this.veterinario = veterinario;
+	}
+
+	public List<Pedido> getPedidos() {
+		return pedidos;
+	}
+
+	public void setPedidos(List<Pedido> pedidos) {
+		this.pedidos = pedidos;
 	}
 
 	public ConsultaStatus getConsultaStatus() {

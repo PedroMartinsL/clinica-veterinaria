@@ -4,89 +4,120 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import com.clinica.springboot.controller.exceptions.DatabaseException;
 import com.clinica.springboot.controller.exceptions.ResourceNotFoundException;
+import com.clinica.springboot.model.entities.AuxVeterinario;
 import com.clinica.springboot.model.entities.Consulta;
+import com.clinica.springboot.model.entities.Veterinario;
+import com.clinica.springboot.repositories.AuxVeterinarioRepository;
 import com.clinica.springboot.repositories.ConsultaRepository;
+import com.clinica.springboot.repositories.VeterinarioRepository;
 
 import jakarta.persistence.EntityNotFoundException;
 
 @Service
 public class ConsultaService {
-	
-	@Autowired
-	private ConsultaRepository repository;
 
-	public List<Consulta> findAll() {
-		return repository.findAll();
-	}
-	
-	public Consulta findById(Long id) {
-		Optional<Consulta> obj = repository.findById(id);
-		return obj.get();
-	}
-	
-	public Consulta insert(Consulta obj) {
-		return repository.save(obj);
-	}
-	
-	public void delete(Long id) {
-		try {
-			repository.deleteById(id);
-		} catch (EmptyResultDataAccessException e) {
-			throw new ResourceNotFoundException(id);
-		} catch (DataIntegrityViolationException e) {
-			throw new DatabaseException(e.getMessage()); //Passando exception da própria camada de serviço
-		}
-	}
+    @Autowired
+    private ConsultaRepository repository;
 
-	public Consulta update(Long id, Consulta obj) {
-		try {
-			Consulta entity = repository.getReferenceById(id); //monitorar um obj pelo jpa para depois efetuar uma op no bd
-			updateData(entity, obj);
-			return repository.save(entity);
-		} catch (EntityNotFoundException e) {
-			throw new ResourceNotFoundException(id);
-		}
-	}
+    @Autowired
+    private AuxVeterinarioRepository auxRepository;
 
-	private void updateData(Consulta entity, Consulta obj) {
-		entity.setConsultaStatus(obj.getConsultaStatus());
-		entity.setDoenca(obj.getDoenca());
-		entity.setVeterinario(obj.getVeterinario());
-		entity.setAuxVeterinario(obj.getAuxVeterinario());
-		entity.setData(obj.getData());
-	}
-	
-	public Consulta updatePatch(Long id, Consulta obj) {
-	    try {
-	        Consulta entity = repository.getReferenceById(id);
-	        partialUpdateData(entity, obj); 
-	        return repository.save(entity); 
-	    } catch (EntityNotFoundException e) {
-	        throw new ResourceNotFoundException(id); 
-	    }
-	}
+    @Autowired
+    private VeterinarioRepository vetRepository;
 
-	private void partialUpdateData(Consulta entity, Consulta obj) {
-	    if (obj.getConsultaStatus() != null) {
-	        entity.setConsultaStatus(obj.getConsultaStatus());
-	    }
-	    if (obj.getDoenca() != null) {
-	        entity.setDoenca(obj.getDoenca());
-	    }
-	    if (obj.getAuxVeterinario() != null) {
-	    	entity.setAuxVeterinario(obj.getAuxVeterinario());
-	    }
-	    if (obj.getVeterinario() != null) {
-	    	entity.setVeterinario(obj.getVeterinario());
-	    }
-	    if (obj.getData() != null) {
-	    	entity.setData(obj.getData());
-	    }
-	}
+    public List<Consulta> findAll() {
+        return repository.findAll();
+    }
+
+    public Consulta findById(Long id) {
+        Optional<Consulta> obj = repository.findById(id);
+        return obj.orElseThrow(() -> new ResourceNotFoundException(id));
+    }
+
+    @Transactional
+    public Consulta insert(Consulta obj) {
+        if (obj.getVeterinario() != null) {
+            Veterinario veterinario = vetRepository.findById(obj.getVeterinario().getCpf())
+                    .orElseThrow(() -> new IllegalArgumentException("Veterinario não encontrado"));
+            veterinario.getConsultas().add(obj);
+            vetRepository.save(veterinario);
+            
+            if (obj.getAuxVeterinario() != null) {
+                AuxVeterinario aux = auxRepository.findById(obj.getAuxVeterinario().getCpf())
+                        .orElseThrow(() -> new IllegalArgumentException("Auxiliar veterinario não encontrado"));
+                aux.getConsultas().add(obj);
+                auxRepository.save(aux);
+            }
+        }
+        return repository.save(obj);
+    }
+
+    @Transactional
+    public Consulta update(Long id, Consulta obj) {
+        try {
+            Consulta entity = repository.getReferenceById(id);
+            updateData(entity, obj);
+            return repository.save(entity);
+        } catch (EntityNotFoundException e) {
+            throw new ResourceNotFoundException(id);
+        }
+    }
+
+    private void updateData(Consulta entity, Consulta obj) {
+        entity.setConsultaStatus(obj.getConsultaStatus());
+        entity.setDoenca(obj.getDoenca());
+        entity.setData(obj.getData());
+
+        // Se o veterinário foi alterado, remove a consulta da lista do veterinário atual
+        if (entity.getVeterinario() != null && !entity.getVeterinario().equals(obj.getVeterinario())) {
+            entity.getVeterinario().getConsultas().remove(entity); // Remove a consulta da lista do veterinário atual
+        }
+
+        // Atualiza o veterinário
+        entity.setVeterinario(obj.getVeterinario());
+        if (entity.getVeterinario() != null) {
+            entity.getVeterinario().getConsultas().add(entity); 
+            vetRepository.save(entity.getVeterinario());
+        }
+
+        // Se o auxiliar foi alterado, remove a consulta da lista do auxiliar atual
+        if (entity.getAuxVeterinario() != null && !entity.getAuxVeterinario().equals(obj.getAuxVeterinario())) {
+            entity.getAuxVeterinario().getConsultas().remove(entity);
+        }
+
+        // Atualiza o auxiliar
+        entity.setAuxVeterinario(obj.getAuxVeterinario());
+        if (entity.getAuxVeterinario() != null) {
+            entity.getAuxVeterinario().getConsultas().add(entity);
+            auxRepository.save(entity.getAuxVeterinario()); 
+        }
+    }
+
+
+    @Transactional
+    public Consulta updatePatch(Long id, Consulta obj) {
+        try {
+            Consulta entity = repository.getReferenceById(id);
+            partialUpdateData(entity, obj);
+            return repository.save(entity);
+        } catch (EntityNotFoundException e) {
+            throw new ResourceNotFoundException(id);
+        }
+    }
+
+    private void partialUpdateData(Consulta entity, Consulta obj) {
+        if (obj.getConsultaStatus() != null) {
+            entity.setConsultaStatus(obj.getConsultaStatus());
+        }
+        if (obj.getDoenca() != null) {
+            entity.setDoenca(obj.getDoenca());
+        }
+        if (obj.getData() != null) {
+            entity.setData(obj.getData());
+        }
+    }
 }

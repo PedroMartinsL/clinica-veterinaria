@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import com.clinica.springboot.model.entities.Consulta;
 import com.clinica.springboot.model.entities.Veterinario;
 import com.clinica.springboot.services.VeterinarioService;
 
@@ -63,5 +64,11 @@ public class VeterinarioResource {
 	public ResponseEntity<Veterinario> partialUpdate(@PathVariable String id, @RequestBody Veterinario obj) {
 	    obj = service.updatePatch(id, obj);
 	    return ResponseEntity.ok().body(obj);
+	}
+	
+	@GetMapping(value = "/{id}/consultas") 
+	public ResponseEntity<List<Consulta>> findConsultas(@PathVariable String id) {
+		Veterinario vet = service.findById(null);
+		return ResponseEntity.ok().body(vet.getConsultas());
 	}
 }

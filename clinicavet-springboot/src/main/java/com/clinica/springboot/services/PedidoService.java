@@ -4,18 +4,15 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
-import com.clinica.springboot.controller.exceptions.DatabaseException;
-import com.clinica.springboot.controller.exceptions.ResourceNotFoundException;
+import com.clinica.springboot.model.entities.Consulta;
 import com.clinica.springboot.model.entities.Medicamento;
 import com.clinica.springboot.model.entities.Pedido;
+import com.clinica.springboot.repositories.ConsultaRepository;
 import com.clinica.springboot.repositories.MedicamentoRepository;
 import com.clinica.springboot.repositories.PedidoRepository;
 
-import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 
 @Service
@@ -25,7 +22,10 @@ public class PedidoService {
 	private PedidoRepository repository;
 	
 	@Autowired
-    private MedicamentoRepository MedicamentoRepository;
+    private MedicamentoRepository medicamentoRepository;
+	
+	@Autowired
+    private ConsultaRepository consultaRepository;
 
 	public List<Pedido> findAll() {
 		return repository.findAll();
@@ -38,67 +38,22 @@ public class PedidoService {
 	
 	@Transactional
 	public Pedido insert(Pedido obj) {
-        Medicamento Medicamento = MedicamentoRepository.findById(obj.getMedicamento().getId())
+        Medicamento medicamento = medicamentoRepository.findById(obj.getMedicamento().getId())
                 .orElseThrow(() -> new IllegalArgumentException("Medicamento não encontrado"));
 
-        if (Medicamento.getQuantidadeAtual() < obj.getQuantidade()) {
-            throw new IllegalArgumentException("Quantidade insuficiente no Medicamento para o medicamento");
+        if (medicamento.getQuantidadeAtual() < obj.getQuantidade()) {
+            throw new IllegalArgumentException("Quantidade insuficiente no Estoque para o medicamento");
         }
 
-        Medicamento.setQuantidadeAtual(Medicamento.getQuantidadeAtual() - obj.getQuantidade());
-        MedicamentoRepository.save(Medicamento);
+        medicamento.setQuantidadeAtual(medicamento.getQuantidadeAtual() - obj.getQuantidade());
+        medicamentoRepository.save(medicamento);
+        
+        Consulta consulta = consultaRepository.findById(obj.getConsulta().getId())
+                .orElseThrow(() -> new IllegalArgumentException("Consulta não encontrada"));
+        
+        consulta.getPedidos().add(obj);
+        consultaRepository.save(consulta);
 
         return repository.save(obj);
     }
-
-	//possivel deleção
-	public void delete(Long id) {
-		try {
-			repository.deleteById(id);
-		} catch (EmptyResultDataAccessException e) {
-			throw new ResourceNotFoundException(id);
-		} catch (DataIntegrityViolationException e) {
-			throw new DatabaseException(e.getMessage()); 
-		}
-	}
-
-	public Pedido update(Long id, Pedido obj) {
-		try {
-			Pedido entity = repository.getReferenceById(id); 
-			updateData(entity, obj);
-			return repository.save(entity);
-		} catch (EntityNotFoundException e) {
-			throw new ResourceNotFoundException(id);
-		}
-	}
-	
-	//possível alteração
-	private void updateData(Pedido entity, Pedido obj) {
-		entity.setMedicamento(obj.getMedicamento());
-		entity.setQuantidade(obj.getQuantidade());
-		entity.setConsulta(obj.getConsulta());
-	}
-	
-	public Pedido updatePatch(Long id, Pedido obj) {
-	    try {
-	    	Pedido entity = repository.getReferenceById(id);
-	        partialUpdateData(entity, obj); 
-	        return repository.save(entity); 
-	    } catch (EntityNotFoundException e) {
-	        throw new ResourceNotFoundException(id); 
-	    }
-	}
-
-	//possível alteração
-	private void partialUpdateData(Pedido entity, Pedido obj) {
-		if (obj.getMedicamento() != null) {
-			entity.setMedicamento(obj.getMedicamento());
-		}
-		if (obj.getQuantidade() != null) {
-			entity.setQuantidade(obj.getQuantidade());
-		}
-		if (obj.getConsulta() != null) {
-			entity.setConsulta(obj.getConsulta());
-		}
-	}
 }
