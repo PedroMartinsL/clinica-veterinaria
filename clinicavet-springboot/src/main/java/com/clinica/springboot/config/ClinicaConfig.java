@@ -49,7 +49,7 @@ public class ClinicaConfig implements CommandLineRunner {
 
 	@Autowired
 	private PetRepository petRepository;
-	
+
 	@Autowired
 	private PedidoRepository pedidoRepository;
 
@@ -73,16 +73,11 @@ public class ClinicaConfig implements CommandLineRunner {
 		auxRepository.saveAll(Arrays.asList(aux, aux2));
 		vetRepository.saveAll(Arrays.asList(vet, vet2));
 
-		Medicamento dipirona = new Medicamento(null, "Dipirona", "Cimed", 25.0, 15.50,
-				20, true);
-		Medicamento vonal = new Medicamento(null, "Vonal", "Avert", 5.0, 12.00, 35,
-				true);
-		Medicamento cefalexina = new Medicamento(null, "Cefalexina", "ABL", 500.0, 40.00,
-				25, true);
-		Medicamento probiotico = new Medicamento(null, "Probiótico", "Biofarma", 30.0, 8.20,
-				40, true);
-		Medicamento creatina = new Medicamento(null, "Creatina Equina", "VetUP", 25.0, 80.00,
-				15, true);
+		Medicamento dipirona = new Medicamento(null, "Dipirona", "Cimed", 25.0, 15.50, 15, 20);
+		Medicamento vonal = new Medicamento(null, "Vonal", "Avert", 5.0, 12.00, 20, 35);
+		Medicamento cefalexina = new Medicamento(null, "Cefalexina", "ABL", 500.0, 40.00, 12, 25);
+		Medicamento probiotico = new Medicamento(null, "Probiótico", "Biofarma", 30.0, 8.20, 40, 30);
+		Medicamento creatina = new Medicamento(null, "Creatina Equina", "VetUP", 25.0, 80.00, 15, 20);
 
 		medRepository.saveAll(Arrays.asList(dipirona, vonal, cefalexina, probiotico, creatina));
 
@@ -103,28 +98,25 @@ public class ClinicaConfig implements CommandLineRunner {
 				ConsultaStatus.DIVIDA, pet2);
 		Consulta consulta3 = new Consulta(null, Instant.parse("2024-11-25T16:00:00Z"), "Diarreia", vet2, aux,
 				ConsultaStatus.CANCELADA, pet3);
-		Consulta consulta4 = new Consulta(null, Instant.parse("2024-12-01T09:15:00Z"), "Dificuldade para andar", vet, aux2,
-				ConsultaStatus.ANDAMENTO, pet4);
+		Consulta consulta4 = new Consulta(null, Instant.parse("2024-12-01T09:15:00Z"), "Dificuldade para andar", vet,
+				aux2, ConsultaStatus.ANDAMENTO, pet4);
 		Consulta consulta5 = new Consulta(null, Instant.parse("2024-12-05T11:00:00Z"), "Check-up geral", vet2, aux2,
 				ConsultaStatus.CONCLUIDA, pet5);
-		
+
 		consultaRepository.saveAll(Arrays.asList(consulta, consulta1, consulta2, consulta3, consulta4, consulta5));
-		
-		Pedido pedido1 = new Pedido(null, vet, dipirona, consulta, 3);
-		Pedido pedido2 = new Pedido(null, vet, cefalexina, consulta, 1);
-		Pedido pedido3 = new Pedido(null, vet2, vonal, consulta1, 1);
-		
+
+		Pedido pedido1 = new Pedido(null, dipirona, consulta, 3);
+		Pedido pedido2 = new Pedido(null, cefalexina, consulta, 1);
+		Pedido pedido3 = new Pedido(null, vonal, consulta1, 1);
+
 		pedidoRepository.saveAll(Arrays.asList(pedido1, pedido2, pedido3));
-		
+
 		vet.getConsultas().addAll(Arrays.asList(consulta, consulta2, consulta4));
 		vet.getConsultas().addAll(Arrays.asList(consulta1, consulta3, consulta5));
-		
-		vet.getPedidos().addAll(Arrays.asList(pedido1, pedido2));
-		vet.getPedidos().addAll(Arrays.asList(pedido3));
-		
+
 		aux.getConsultas().addAll(Arrays.asList(consulta, consulta1, consulta3));
 		aux.getConsultas().addAll(Arrays.asList(consulta2, consulta4, consulta5));
-		
+
 		auxRepository.saveAll(Arrays.asList(aux, aux2));
 		vetRepository.saveAll(Arrays.asList(vet, vet2));
 	}

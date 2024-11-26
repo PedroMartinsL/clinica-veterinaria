@@ -26,10 +26,6 @@ public class Veterinario implements Serializable {
 	@OneToMany(mappedBy = "veterinario")
 	private List<Consulta> consultas = new ArrayList<>();
 
-	@JsonIgnore
-	@OneToMany(mappedBy = "veterinario")
-	private List<Pedido> pedidos = new ArrayList<>();
-
 	public Veterinario() {
 	}
 
@@ -69,14 +65,6 @@ public class Veterinario implements Serializable {
 
 	public void setConsultas(List<Consulta> consultas) {
 		this.consultas = consultas;
-	}
-
-	public List<Pedido> getPedidos() {
-		return pedidos;
-	}
-
-	public void setPedidos(List<Pedido> pedidos) {
-		this.pedidos = pedidos;
 	}
 
 	@Override

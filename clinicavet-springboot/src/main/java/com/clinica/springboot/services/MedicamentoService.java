@@ -2,6 +2,7 @@ package com.clinica.springboot.services;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -56,10 +57,11 @@ public class MedicamentoService {
 
 	private void updateData(Medicamento entity, Medicamento obj) {
 		entity.setConcentracao(obj.getConcentracao());
-		entity.setContrato(obj.isContrato());
 		entity.setPreco(obj.getPreco());
 		entity.setNome(obj.getNome());
-		entity.setQuantidade(obj.getQuantidade());
+		entity.setQuantidadeAtual(obj.getQuantidadeAtual());
+		entity.setQuantidadeMinima(obj.getQuantidadeMinima());
+		
 		entity.setLaboratorio(obj.getLaboratorio());
 	}
 	
@@ -77,21 +79,37 @@ public class MedicamentoService {
 	    if (obj.getConcentracao() != null) {
 	        entity.setConcentracao(obj.getConcentracao());
 	    }
-	    if (obj.isContrato() != entity.isContrato()) {
-	        entity.setContrato(obj.isContrato());
-	    }
 	    if (obj.getPreco() != null) {
 	        entity.setPreco(obj.getPreco());
 	    }
 	    if (obj.getNome() != null) {
 	        entity.setNome(obj.getNome());
 	    }
-	    if (obj.getQuantidade() != null) {
-	        entity.setQuantidade(obj.getQuantidade());
+	    if (obj.getQuantidadeAtual() != null) {
+	        entity.setQuantidadeAtual(obj.getQuantidadeAtual());
+	    }
+	    if (obj.getQuantidadeMinima() != null) {
+	    	entity.setQuantidadeMinima(obj.getQuantidadeMinima());
 	    }
 	    if (obj.getLaboratorio() != null) {
 	        entity.setLaboratorio(obj.getLaboratorio());
 	    }
 	}
+	
+	 // Verifica necessidade de reposição
+    public List<Medicamento> verificarReposicao() {
+        return repository.findAll()
+                .stream()
+                .filter(item -> item.getQuantidadeAtual() <= item.getQuantidadeMinima())
+                .collect(Collectors.toList());
+    }
+
+    // Atualiza quantidade do estoque
+    public Medicamento atualizarQuantidade(Long id, Integer novaQuantidade) {
+    	Medicamento estoque = repository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Estoque não encontrado!"));
+        estoque.setQuantidadeAtual(novaQuantidade);
+        return repository.save(estoque);
+    }
 
 }

@@ -7,12 +7,11 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 
 @Entity
-public class Pedido implements Serializable {
+public class Estoque implements Serializable {
+
 	private static final long serialVersionUID = 1L;
 
 	@Id
@@ -20,25 +19,20 @@ public class Pedido implements Serializable {
 	private Long id;
 
 	@OneToOne
-	@JoinColumn(name = "medicamento_id")
 	private Medicamento medicamento;
 
-	@ManyToOne
-	@JoinColumn(name = "consulta_id")
-	private Consulta consulta;
-
 	private Integer quantidade;
+	private boolean contrato;
 
-	public Pedido() {
+	public Estoque() {
 	}
 
-	public Pedido(Long id, Medicamento medicamento, Consulta consulta,
-			Integer quantidade) {
+	public Estoque(Long id, Medicamento medicamento, Integer quantidade, boolean contrato) {
 		super();
 		this.id = id;
 		this.medicamento = medicamento;
-		this.consulta = consulta;
 		this.quantidade = quantidade;
+		this.contrato = contrato;
 	}
 
 	public Long getId() {
@@ -57,20 +51,20 @@ public class Pedido implements Serializable {
 		this.medicamento = medicamento;
 	}
 
-	public Consulta getConsulta() {
-		return consulta;
-	}
-
-	public void setConsulta(Consulta consulta) {
-		this.consulta = consulta;
-	}
-
 	public Integer getQuantidade() {
 		return quantidade;
 	}
 
 	public void setQuantidade(Integer quantidade) {
 		this.quantidade = quantidade;
+	}
+
+	public boolean isContrato() {
+		return contrato;
+	}
+
+	public void setContrato(boolean contrato) {
+		this.contrato = contrato;
 	}
 
 	@Override
@@ -86,7 +80,8 @@ public class Pedido implements Serializable {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Pedido other = (Pedido) obj;
+		Estoque other = (Estoque) obj;
 		return Objects.equals(id, other.id);
 	}
+
 }

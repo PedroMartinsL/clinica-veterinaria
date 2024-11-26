@@ -10,16 +10,22 @@ import org.springframework.stereotype.Service;
 
 import com.clinica.springboot.controller.exceptions.DatabaseException;
 import com.clinica.springboot.controller.exceptions.ResourceNotFoundException;
+import com.clinica.springboot.model.entities.Medicamento;
 import com.clinica.springboot.model.entities.Pedido;
+import com.clinica.springboot.repositories.MedicamentoRepository;
 import com.clinica.springboot.repositories.PedidoRepository;
 
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 
 @Service
 public class PedidoService {
 	
 	@Autowired
 	private PedidoRepository repository;
+	
+	@Autowired
+    private MedicamentoRepository MedicamentoRepository;
 
 	public List<Pedido> findAll() {
 		return repository.findAll();
@@ -30,10 +36,22 @@ public class PedidoService {
 		return obj.get();
 	}
 	
+	@Transactional
 	public Pedido insert(Pedido obj) {
-		return repository.save(obj);
-	}
+        Medicamento Medicamento = MedicamentoRepository.findById(obj.getMedicamento().getId())
+                .orElseThrow(() -> new IllegalArgumentException("Medicamento não encontrado"));
 
+        if (Medicamento.getQuantidadeAtual() < obj.getQuantidade()) {
+            throw new IllegalArgumentException("Quantidade insuficiente no Medicamento para o medicamento");
+        }
+
+        Medicamento.setQuantidadeAtual(Medicamento.getQuantidadeAtual() - obj.getQuantidade());
+        MedicamentoRepository.save(Medicamento);
+
+        return repository.save(obj);
+    }
+
+	//possivel deleção
 	public void delete(Long id) {
 		try {
 			repository.deleteById(id);
@@ -53,7 +71,8 @@ public class PedidoService {
 			throw new ResourceNotFoundException(id);
 		}
 	}
-
+	
+	//possível alteração
 	private void updateData(Pedido entity, Pedido obj) {
 		entity.setMedicamento(obj.getMedicamento());
 		entity.setQuantidade(obj.getQuantidade());
@@ -70,6 +89,7 @@ public class PedidoService {
 	    }
 	}
 
+	//possível alteração
 	private void partialUpdateData(Pedido entity, Pedido obj) {
 		if (obj.getMedicamento() != null) {
 			entity.setMedicamento(obj.getMedicamento());

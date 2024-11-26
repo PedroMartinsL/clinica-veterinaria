@@ -16,28 +16,28 @@ public class Medicamento implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	
+
 	private String nome;
 	private String laboratorio;
 	private Double concentracao;
 	private Double preco;
 
-	private Integer quantidade;
-	private boolean contrato;
+	private Integer quantidadeMinima;
+	private Integer quantidadeAtual;
 
 	public Medicamento() {
 	}
 
-	public Medicamento(Long id, String nome, String laboratorio, Double concentracao, Double preco, Integer quantidade,
-			boolean contrato) {
+	public Medicamento(Long id, String nome, String laboratorio, Double concentracao, Double preco,
+			Integer quantidadeMinima, Integer quantidadeAtual) {
 		super();
 		this.id = id;
 		this.nome = nome;
 		this.laboratorio = laboratorio;
 		this.concentracao = concentracao;
 		this.preco = preco;
-		this.quantidade = quantidade;
-		this.contrato = contrato;
+		this.quantidadeMinima = quantidadeMinima;
+		this.quantidadeAtual = quantidadeAtual;
 	}
 
 	public Long getId() {
@@ -80,20 +80,20 @@ public class Medicamento implements Serializable {
 		this.preco = preco;
 	}
 
-	public Integer getQuantidade() {
-		return quantidade;
+	public Integer getQuantidadeMinima() {
+		return quantidadeMinima;
 	}
 
-	public void setQuantidade(Integer quantidade) {
-		this.quantidade = quantidade;
+	public void setQuantidadeMinima(Integer quantidadeMinima) {
+		this.quantidadeMinima = quantidadeMinima;
 	}
 
-	public boolean isContrato() {
-		return contrato;
+	public Integer getQuantidadeAtual() {
+		return quantidadeAtual;
 	}
 
-	public void setContrato(boolean contrato) {
-		this.contrato = contrato;
+	public void setQuantidadeAtual(Integer quantidadeAtual) {
+		this.quantidadeAtual = quantidadeAtual;
 	}
 
 	@Override
@@ -112,5 +112,4 @@ public class Medicamento implements Serializable {
 		Medicamento other = (Medicamento) obj;
 		return Objects.equals(id, other.id);
 	}
-
 }

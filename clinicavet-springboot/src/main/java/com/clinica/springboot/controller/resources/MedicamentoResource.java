@@ -22,46 +22,56 @@ import com.clinica.springboot.services.MedicamentoService;
 @RestController
 @RequestMapping(value = "/medicamentos")
 public class MedicamentoResource {
-	
+
 	@Autowired
 	private MedicamentoService service;
-		
-	@GetMapping 
+
+	@GetMapping
 	public ResponseEntity<List<Medicamento>> findAll() {
 		List<Medicamento> list = service.findAll();
 		return ResponseEntity.ok().body(list);
 	}
-	
-	@GetMapping(value = "/{id}") 
+
+	@GetMapping(value = "/{id}")
 	public ResponseEntity<Medicamento> findById(@PathVariable Long id) {
 		Medicamento obj = service.findById(id);
 		return ResponseEntity.ok().body(obj);
 	}
-	
+
 	@PostMapping
 	public ResponseEntity<Medicamento> insert(@RequestBody Medicamento obj) {
 		obj = service.insert(obj);
-		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
-				.buildAndExpand(obj.getId()).toUri();
-		return ResponseEntity.created(uri).body(obj); 
+		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(obj.getId()).toUri();
+		return ResponseEntity.created(uri).body(obj);
 	}
-	
+
 	@DeleteMapping(value = "/{id}")
-	public ResponseEntity<Void> delete(@PathVariable Long id)  {
+	public ResponseEntity<Void> delete(@PathVariable Long id) {
 		service.delete(id);
 		return ResponseEntity.noContent().build();
-		//código 204, quando não temos conteúdo
+		// código 204, quando não temos conteúdo
 	}
-	
+
 	@PutMapping(value = "/{id}")
 	public ResponseEntity<Medicamento> update(@PathVariable Long id, @RequestBody Medicamento obj) {
 		obj = service.update(id, obj);
 		return ResponseEntity.ok().body(obj);
 	}
-	
+
 	@PatchMapping("/{id}")
 	public ResponseEntity<Medicamento> partialUpdate(@PathVariable Long id, @RequestBody Medicamento obj) {
 		obj = service.updatePatch(id, obj);
-	    return ResponseEntity.ok().body(obj);
+		return ResponseEntity.ok().body(obj);
+	}
+
+	@GetMapping("/reposicao")
+	public ResponseEntity<List<Medicamento>> listarReposicao() {
+		return ResponseEntity.ok(service.verificarReposicao());
+	}
+
+	@PutMapping("/{id}/quantidade")
+	public ResponseEntity<Medicamento> atualizarQuantidade(@PathVariable Long id, @RequestBody Integer novaQuantidade) {
+		Medicamento medicamento = service.atualizarQuantidade(id, novaQuantidade);
+		return ResponseEntity.ok(medicamento);
 	}
 }
