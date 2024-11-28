@@ -140,7 +140,71 @@ O Diagrama de Classes abaixo representa a estrutura do sistema, incluindo as cla
 7. Certifique-se de que todos os testes estejam passando e que a documentação esteja atualizada.
 
 
-## VIII. Licença
+## VIII. Modelo Conceitual e Lógico do Banco de Dados
+
+### Modelo Conceitual
+![WhatsApp Image 2024-11-28 at 20 07 47_daf2d404](https://github.com/user-attachments/assets/541109c6-a23c-4245-88e0-92037e8373a5)
+
+O modelo conceitual foi criado para representar as entidades e seus relacionamentos no sistema, oferecendo uma visão abstrata e de alto nível. Ele define as principais entidades, como **Pet**, **Veterinário**, **Consulta**, **Medicamento**, **Internamento**, entre outras, e seus relacionamentos.
+
+
+**Principais Entidades e Relacionamentos:**
+- **Tutor** possui vários **Pets**.
+- **Pet** pode estar associado a múltiplas **Consultas**.
+- **Consulta** está ligada a um **Veterinário** responsável.
+- **Internamento** está relacionado a um **Pet** e inclui registros de medicamentos administrados.
+- **Estoque** está associado a medicamentos disponíveis na clínica.
+
+---
+
+### Modelo Lógico
+![WhatsApp Image 2024-11-28 at 20 08 38_d2241ecb](https://github.com/user-attachments/assets/4007f137-31f2-475e-b193-b38878f09875)
+
+O modelo lógico detalha as tabelas, colunas, tipos de dados e relacionamentos que serão implementados no banco de dados.
+
+
+**Descrição das Principais Tabelas:**
+1. **Tutores**
+   - `id_tutor` (PK, INT)
+   - `nome` (VARCHAR)
+   - `cpf` (VARCHAR)
+   - `telefone` (VARCHAR)
+
+2. **Pets**
+   - `id_pet` (PK, INT)
+   - `nome` (VARCHAR)
+   - `idade` (INT)
+   - `raca` (VARCHAR)
+   - `id_tutor` (FK, INT)
+
+3. **Consultas**
+   - `id_consulta` (PK, INT)
+   - `data_consulta` (DATETIME)
+   - `id_pet` (FK, INT)
+   - `id_veterinario` (FK, INT)
+   - `diagnostico` (TEXT)
+
+4. **Internamentos**
+   - `id_internamento` (PK, INT)
+   - `id_pet` (FK, INT)
+   - `data_inicial` (DATETIME)
+   - `data_final` (DATETIME)
+   - `observacoes` (TEXT)
+
+5. **Estoque**
+   - `id_medicamento` (PK, INT)
+   - `nome` (VARCHAR)
+   - `quantidade` (INT)
+
+---
+
+### Ferramenta Utilizada
+
+Os modelos foram criados utilizando o software [dbdiagram.io](https://dbdiagram.io) para facilitar a visualização e documentação.
+
+
+
+## IX. Licença
 
 Este projeto está licenciado sob a Licença MIT - veja o arquivo [LICENSE](LICENSE) para mais detalhes.
 
