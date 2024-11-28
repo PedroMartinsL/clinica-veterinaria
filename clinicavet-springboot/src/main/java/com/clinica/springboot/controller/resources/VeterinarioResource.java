@@ -68,7 +68,7 @@ public class VeterinarioResource {
 	
 	@GetMapping(value = "/{id}/consultas") 
 	public ResponseEntity<List<Consulta>> findConsultas(@PathVariable String id) {
-		Veterinario vet = service.findById(null);
+		Veterinario vet = service.findById(id);
 		return ResponseEntity.ok().body(vet.getConsultas());
 	}
 }

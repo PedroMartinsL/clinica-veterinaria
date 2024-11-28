@@ -121,8 +121,12 @@ public class Consulta implements Serializable {
 	}
 
 	public ConsultaStatus getConsultaStatus() {
-		return ConsultaStatus.valueOf(consultaStatus);
+	    if (consultaStatus == null) {
+	        return null;
+	    }
+	    return ConsultaStatus.valueOf(consultaStatus);
 	}
+
 
 	public void setConsultaStatus(ConsultaStatus orderStatus) {
 		if (orderStatus != null)

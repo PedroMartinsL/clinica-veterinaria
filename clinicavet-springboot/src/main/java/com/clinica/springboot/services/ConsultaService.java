@@ -45,7 +45,6 @@ public class ConsultaService {
                     .orElseThrow(() -> new IllegalArgumentException("Veterinario não encontrado"));
             veterinario.getConsultas().add(obj);
             vetRepository.save(veterinario);
-            
             if (obj.getAuxVeterinario() != null) {
                 AuxVeterinario aux = auxRepository.findById(obj.getAuxVeterinario().getCpf())
                         .orElseThrow(() -> new IllegalArgumentException("Auxiliar veterinario não encontrado"));
@@ -71,30 +70,6 @@ public class ConsultaService {
         entity.setConsultaStatus(obj.getConsultaStatus());
         entity.setDoenca(obj.getDoenca());
         entity.setData(obj.getData());
-
-        // Se o veterinário foi alterado, remove a consulta da lista do veterinário atual
-        if (entity.getVeterinario() != null && !entity.getVeterinario().equals(obj.getVeterinario())) {
-            entity.getVeterinario().getConsultas().remove(entity); // Remove a consulta da lista do veterinário atual
-        }
-
-        // Atualiza o veterinário
-        entity.setVeterinario(obj.getVeterinario());
-        if (entity.getVeterinario() != null) {
-            entity.getVeterinario().getConsultas().add(entity); 
-            vetRepository.save(entity.getVeterinario());
-        }
-
-        // Se o auxiliar foi alterado, remove a consulta da lista do auxiliar atual
-        if (entity.getAuxVeterinario() != null && !entity.getAuxVeterinario().equals(obj.getAuxVeterinario())) {
-            entity.getAuxVeterinario().getConsultas().remove(entity);
-        }
-
-        // Atualiza o auxiliar
-        entity.setAuxVeterinario(obj.getAuxVeterinario());
-        if (entity.getAuxVeterinario() != null) {
-            entity.getAuxVeterinario().getConsultas().add(entity);
-            auxRepository.save(entity.getAuxVeterinario()); 
-        }
     }
 
 

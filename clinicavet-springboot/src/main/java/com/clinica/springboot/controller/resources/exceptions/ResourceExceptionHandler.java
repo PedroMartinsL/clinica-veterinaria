@@ -31,4 +31,18 @@ public class ResourceExceptionHandler {
 		StandardError err = new StandardError(Instant.now(), status.value(), error, e.getMessage(), request.getRequestURI());
 		return ResponseEntity.status(status).body(err);
 	}
+	
+	@ExceptionHandler(IllegalArgumentException.class)
+	public ResponseEntity<StandardError> illegalArgument(IllegalArgumentException e, HttpServletRequest request) {
+	    String error = "Invalid argument";
+	    HttpStatus status = HttpStatus.BAD_REQUEST; // Escolha o status apropriado
+	    StandardError err = new StandardError(
+	        Instant.now(), 
+	        status.value(), 
+	        error, 
+	        e.getMessage(), 
+	        request.getRequestURI()
+	    );
+	    return ResponseEntity.status(status).body(err);
+	}
 }

@@ -44,16 +44,19 @@ public class PedidoService {
         if (medicamento.getQuantidadeAtual() < obj.getQuantidade()) {
             throw new IllegalArgumentException("Quantidade insuficiente no Estoque para o medicamento");
         }
-
+        
         medicamento.setQuantidadeAtual(medicamento.getQuantidadeAtual() - obj.getQuantidade());
+        
         medicamentoRepository.save(medicamento);
+        obj.setMedicamento(medicamento);
+   
         
         Consulta consulta = consultaRepository.findById(obj.getConsulta().getId())
                 .orElseThrow(() -> new IllegalArgumentException("Consulta não encontrada"));
         
-        consulta.getPedidos().add(obj);
         consultaRepository.save(consulta);
-
+        obj.setConsulta(consulta);
+        
         return repository.save(obj);
     }
 }
